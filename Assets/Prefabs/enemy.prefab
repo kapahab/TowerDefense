@@ -167,7 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackDamage: 10
   attackCooldown: 2
-  attackRange: 1.05
+  attackRange: 1.83
   attackTarget: {fileID: 0}
 --- !u!114 &8880022535868166987
 MonoBehaviour:

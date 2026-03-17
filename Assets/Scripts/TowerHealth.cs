@@ -4,7 +4,7 @@ using UnityEngine;
 public class TowerHealth : MonoBehaviour, IDamageable
 {
     public float maxHealth = 100f;
-    public static Action OnTowerDestroyed;
+    public static Action<GameObject> OnTowerDestroyed;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -23,7 +23,7 @@ public class TowerHealth : MonoBehaviour, IDamageable
         {
             // Handle tower destruction logic here (e.g., play animation, disable tower, etc.)
             Debug.Log("Tower destroyed!");
-            OnTowerDestroyed?.Invoke();
+            OnTowerDestroyed?.Invoke(gameObject);
             Destroy(this.gameObject); //?
         }
 
