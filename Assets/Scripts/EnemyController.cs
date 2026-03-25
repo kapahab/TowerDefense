@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum EnemyState
 {
@@ -9,11 +10,12 @@ public enum EnemyState
     Attacking
 }
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour 
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Transform target;
-    [SerializeField]private EnemyAttack attack;
+    [SerializeField]private IAttackStrategy attack; //maybe make the enemies as types so that they can have different attacks? or just make the attack script more flexible with different attack types and values.
+    [SerializeField] private EnemyData data; //this is reused in both attackstrategy and here, there might be a better way to do this
     [SerializeField] private Movement movement;
     public EnemyState currentState = EnemyState.Idle;
 
@@ -28,10 +30,10 @@ public class EnemyController : MonoBehaviour
         
     }
 
-    void GetNewTarget(Transform newTarget)
+    void GetNewTarget(Transform newTarget) //this should now get the list for all available targets
     {
-        target = newTarget;
-        attack.attackTarget = newTarget;
+        target = newTarget; 
+        attack.ChooseTarget(new List<Transform>() { target }); 
         movement.MoveTo(newTarget);
         currentState = EnemyState.Moving;
     }
@@ -46,7 +48,7 @@ public class EnemyController : MonoBehaviour
                 case EnemyState.Idle:
                     break;
                 case EnemyState.Moving:
-                    if (target != null && Vector3.Distance(target.position, transform.position) <= attack.attackRange)
+                    if (target != null && Vector3.Distance(target.position, transform.position) <= data.attackRange)
                     {
                         movement.StopMoving();
                         currentState = EnemyState.Attacking;
@@ -59,9 +61,9 @@ public class EnemyController : MonoBehaviour
                     }
                     else
                     {
-                        attack.SingleAttack();
+                        attack.ExecuteAttack(data);
 
-                        yield return new WaitForSeconds(attack.attackCooldown);
+                        yield return new WaitForSeconds(data.attackCooldown);
                         continue;
                     }
 
