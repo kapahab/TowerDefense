@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 540450094836921285}
   - component: {fileID: 2256238314438318450}
   - component: {fileID: 8529129832592376790}
-  - component: {fileID: 3273751826168888511}
   - component: {fileID: 8880022535868166987}
   - component: {fileID: 3132567171835517952}
+  - component: {fileID: 1461598220033189565}
   m_Layer: 6
   m_Name: enemy
   m_TagString: Untagged
@@ -150,25 +150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  attack: {fileID: 3273751826168888511}
+  data: {fileID: 11400000, guid: 2847cd5324f0bda46b54d019600f5805, type: 2}
   movement: {fileID: 8880022535868166987}
   currentState: 0
---- !u!114 &3273751826168888511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3739464271909638667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf0d4aa1512da745ab70c835a0011d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackDamage: 10
-  attackCooldown: 2
-  attackRange: 1.83
-  attackTarget: {fileID: 0}
 --- !u!114 &8880022535868166987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,3 +179,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
+--- !u!114 &1461598220033189565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739464271909638667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29dbe5c3faf7ff448492d9ea42886ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

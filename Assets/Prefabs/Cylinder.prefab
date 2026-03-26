@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 6888552213582661318}
   - component: {fileID: 1064555322493818046}
   - component: {fileID: 7430336826052301994}
-  - component: {fileID: 8672277440825356019}
+  - component: {fileID: 6078495734288422967}
+  - component: {fileID: 7405488015478220522}
   m_Layer: 7
   m_Name: Cylinder
   m_TagString: Untagged
@@ -125,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
---- !u!114 &8672277440825356019
+--- !u!114 &6078495734288422967
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,12 +135,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 8577253915775799298}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a944ed9fd835954f9ee846b679e54c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 87998ec9669531941a753db2e007d2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 5
-  attackCooldown: 1
-  attackDamage: 10
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
+  towerData: {fileID: 11400000, guid: 55bc3220a92f3824b99f130d7ccea398, type: 2}
+--- !u!114 &7405488015478220522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8577253915775799298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f2dd58468cba704181c64bdacdc37de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

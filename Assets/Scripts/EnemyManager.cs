@@ -6,13 +6,12 @@ using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : MonoBehaviour // spawns enemies and sends tower lists to the enemies so that they can select their targets. also updates the tower list when towers are added or removed.
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     //holds the list of towers? towers could send events when they are destroyed so that this script updates the enemys target list
     [SerializeField] List<GameObject> towersList;
-    private Queue<GameObject> towerQueue;
-    public static Action<Transform> OnNextTower;
+    public static Action<List<Transform>> OnNextTower;
 
     [SerializeField] private Transform spawnTransform;
     [SerializeField] private GameObject enemyPrefab;
@@ -44,6 +43,11 @@ public class EnemyManager : MonoBehaviour
 
         towersList.RemoveAll(t=>t == null);
 
+        if (towersList.Count <= 0)
+        {
+            return;
+        }
+
         towersList.Sort((towerA, towerB) =>
         {
             float distA = Vector3.Distance(comparingPosition, towerA.transform.position);
@@ -51,16 +55,7 @@ public class EnemyManager : MonoBehaviour
             return distA.CompareTo(distB);
         });
 
-        towerQueue = new Queue<GameObject>(towersList);
-
-        if (towerQueue.Count > 0)
-        {
-            OnNextTower?.Invoke(towerQueue.Peek().transform);
-        }
-        else
-        {
-            Debug.Log("No more towers in the queue.");
-        }
+        OnNextTower?.Invoke(towersList.ConvertAll(t => t.transform));
     }
 
     void NewTowerAdded(GameObject tower)

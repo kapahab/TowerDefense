@@ -10,17 +10,31 @@ public enum EnemyState
     Attacking
 }
 
-public class EnemyController : MonoBehaviour 
+public class EnemyController : MonoBehaviour //tells a single enemy what to do
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Transform target;
-    [SerializeField]private IAttackStrategy attack; //maybe make the enemies as types so that they can have different attacks? or just make the attack script more flexible with different attack types and values.
+    
     [SerializeField] private EnemyData data; //this is reused in both attackstrategy and here, there might be a better way to do this
-    [SerializeField] private Movement movement;
     public EnemyState currentState = EnemyState.Idle;
+
+    private EnemyHealth health;
+    private Movement movement;
+    private IAttackStrategy attack; //maybe make the enemies as types so that they can have different attacks? or just make the attack script more flexible with different attack types and values.
+
+    void Awake()
+    {
+        movement = GetComponent<Movement>();
+
+        health = GetComponent<EnemyHealth>();
+        health.maxHealth = data.health;
+
+        attack = GetComponent<IAttackStrategy>();
+    }
 
     void Start()
     {
+        
         StartCoroutine(AITick());
     }
 
@@ -30,11 +44,10 @@ public class EnemyController : MonoBehaviour
         
     }
 
-    void GetNewTarget(Transform newTarget) //this should now get the list for all available targets
+    void GetNewTarget(List<Transform> newTargets) //this should now get the list for all available targets
     {
-        target = newTarget; 
-        attack.ChooseTarget(new List<Transform>() { target }); 
-        movement.MoveTo(newTarget);
+        target = attack.ChooseTarget(newTargets);
+        movement.MoveTo(target);
         currentState = EnemyState.Moving;
     }
 

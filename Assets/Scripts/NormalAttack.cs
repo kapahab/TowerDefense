@@ -16,9 +16,9 @@ public class NormalAttack : MonoBehaviour, IAttackStrategy
         
     }
 
-    public void ChooseTarget(List<Transform> potentialTargets)
+    public Transform ChooseTarget(List<Transform> potentialTargets)
     {
-        target = potentialTargets[0]; //this is just a placeholder, we will need to implement some sort of target selection logic here, maybe based on distance or health or something else.
+        return target = potentialTargets[0]; //for selecting the closest tower(The comparison is done in the enemy manager)
     }
     public void ExecuteAttack(EnemyData data)
     {
