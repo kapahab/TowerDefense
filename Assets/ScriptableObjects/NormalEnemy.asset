@@ -15,5 +15,5 @@ MonoBehaviour:
   enemyName: normal
   health: 50
   attackDamage: 5
-  attackRange: 10
+  attackRange: 5
   attackCooldown: 5

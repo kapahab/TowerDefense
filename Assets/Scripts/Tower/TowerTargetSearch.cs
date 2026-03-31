@@ -40,4 +40,10 @@ public class TowerTargetSearch : MonoBehaviour
             yield return new WaitForSeconds(2f);
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, towerData.attackRange);
+    }
 }

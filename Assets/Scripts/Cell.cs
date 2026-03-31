@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
@@ -7,7 +8,8 @@ public class Cell : MonoBehaviour
 
     private MeshFilter meshFilter;
 
-    [SerializeField] private GameObject towerPrefab; //for now
+    [SerializeField] private GameObject selectionScreen;
+    private GameObject selectionInstance;
     private GameObject towerInstance;
 
     public static Action<GameObject> OnTowerSpawned;
@@ -49,11 +51,22 @@ public class Cell : MonoBehaviour
     {
         if (occupied)
             return;
+        selectionInstance = Instantiate(selectionScreen, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+        TowerSelectionButton[] buttons = selectionInstance.GetComponentsInChildren<TowerSelectionButton>();
+        foreach (TowerSelectionButton button in buttons)
+        {
+            button.cell = this;
+        }
+    }
+
+
+    public void InstantiateTower(GameObject towerPrefab)
+    {
         towerInstance = Instantiate(towerPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
         OnTowerSpawned?.Invoke(towerInstance);
         occupied = true;
         meshFilter.mesh = null;
+        Destroy(selectionInstance);
     }
-
 
 }

@@ -15,5 +15,5 @@ MonoBehaviour:
   towerName: normal Tower
   health: 100
   attackDamage: 15
-  attackRange: 5
+  attackRange: 15
   attackCooldown: 2

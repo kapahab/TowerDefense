@@ -100,5 +100,9 @@ public class EnemyController : MonoBehaviour //tells a single enemy what to do
         EnemyManager.OnNextTower -= GetNewTarget;
     }
 
-
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, data.attackRange);
+    }
 }
