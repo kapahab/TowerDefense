@@ -28,16 +28,22 @@ public class TowerTargetSearch : MonoBehaviour
         while (true)
         {
             enemiesInRange = Physics.OverlapSphere(transform.position, towerData.attackRange, enemyLayer);
+
             if (enemiesInRange.Length > 0)
             {
+                // 1. Enemy found! Execute the strategy.
                 attackStrategy.ChooseTarget(enemiesInRange);
                 attackStrategy.ExecuteAttack(towerData);
 
+                // 2. Go on cooldown. The tower cannot shoot or search again until this is over.
                 yield return new WaitForSeconds(towerData.attackCooldown);
-                continue;
             }
-            Debug.Log("No enemies found");
-            yield return new WaitForSeconds(2f);
+            else
+            {
+                // 3. No enemies found. Wait just a tiny fraction of a second before checking again.
+                // This keeps performance high but makes the tower react almost instantly.
+                yield return new WaitForSeconds(0.1f);
+            }
         }
     }
 

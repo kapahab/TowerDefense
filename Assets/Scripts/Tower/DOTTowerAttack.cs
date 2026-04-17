@@ -21,7 +21,7 @@ public class DOTTowerAttack : MonoBehaviour, ITowerAttackStrategy
     {
         for (int i = 0; i < damageTickAmount; i++)
         {
-            if (target != null)
+            if (target as MonoBehaviour != null)
                 target.TakeDamage(data.attackDamage);
             yield return new WaitForSeconds(damageTickDuration);
         }
