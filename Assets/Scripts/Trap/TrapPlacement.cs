@@ -14,10 +14,12 @@ public class TrapPlacement : MonoBehaviour
     [Header("NavMesh Settings")]
     public float navMeshTolerance = 1.0f;
 
+    public int trapCost = 50; // Cost of placing a trap
+
     // NEW: Tracks whether we are currently allowed to place a trap
     private bool isPlacingMode = false;
 
-    // NEW: Call this method from your UI Button's OnClick event
+    
     public void ActivateTrapPlacement()
     {
         isPlacingMode = true;
@@ -46,15 +48,17 @@ public class TrapPlacement : MonoBehaviour
 
                 if (overlappingTraps.Length == 0)
                 {
-                    Instantiate(trapPrefab, navHit.position, Quaternion.identity);
-                    Debug.Log("Trap successfully placed!");
-
-                    // NEW: Turn off placement mode after a successful spawn
-                    isPlacingMode = false;
-                }
-                else
-                {
-                    Debug.LogWarning("Placement failed: Another trap is already in this spot.");
+                    if (EconomyManager.TrySpendGold(trapCost))
+                    {
+                        Instantiate(trapPrefab, navHit.position, Quaternion.identity);
+                        Debug.Log("Trap successfully placed!");
+                        isPlacingMode = false;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Not enough gold to place this trap!");
+                        isPlacingMode = false; 
+                    }
                 }
             }
             else

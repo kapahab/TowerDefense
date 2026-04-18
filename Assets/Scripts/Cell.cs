@@ -52,11 +52,7 @@ public class Cell : MonoBehaviour
         if (occupied)
             return;
         selectionInstance = Instantiate(selectionScreen, transform.position + Vector3.up * 0.5f, Quaternion.identity);
-        TowerSelectionButton[] buttons = selectionInstance.GetComponentsInChildren<TowerSelectionButton>();
-        foreach (TowerSelectionButton button in buttons)
-        {
-            button.cell = this;
-        }
+        selectionInstance.GetComponent<GetRandomTowerButtons>().cell = this;
     }
 
 
