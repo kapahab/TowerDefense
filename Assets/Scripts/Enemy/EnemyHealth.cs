@@ -36,9 +36,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0)
         {
+            Debug.Log("Enemy destroyed!");
+
             EnemyLoot loot = GetComponent<EnemyLoot>();
             if (loot != null) loot.DropGold();
-            Debug.Log("Enemy destroyed!");
+
+            //Check if this enemy splits into smaller enemies
+            SpawnOnDeath spawner = GetComponent<SpawnOnDeath>();
+            if (spawner != null) spawner.SpawnChildren();
+
             Destroy(this.gameObject);
         }
     }

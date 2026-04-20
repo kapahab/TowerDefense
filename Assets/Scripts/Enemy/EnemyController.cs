@@ -1,108 +1,199 @@
-using System;
+//using System;
+//using System.Collections;
+//using UnityEngine;
+//using System.Collections.Generic;
+
+//public enum EnemyState
+//{
+//    Idle,
+//    Moving,
+//    Attacking
+//}
+
+//public class EnemyController : MonoBehaviour //tells a single enemy what to do
+//{
+//    // Start is called once before the first execution of Update after the MonoBehaviour is created
+//    public Transform target;
+
+//    [SerializeField] private EnemyData data; //this is reused in both attackstrategy and here, there might be a better way to do this
+//    public EnemyState currentState = EnemyState.Idle;
+
+//    private EnemyHealth health;
+//    private Movement movement;
+//    private IAttackStrategy attack; //maybe make the enemies as types so that they can have different attacks? or just make the attack script more flexible with different attack types and values.
+
+//    void Awake()
+//    {
+//        movement = GetComponent<Movement>();
+
+//        health = GetComponent<EnemyHealth>();
+//        health.maxHealth = data.health;
+
+//        attack = GetComponent<IAttackStrategy>();
+//    }
+
+//    void Start()
+//    {
+
+//        StartCoroutine(AITick());
+//    }
+
+//    // Update is called once per frame
+//    void Update()
+//    {
+
+//    }
+
+//    void GetNewTarget(List<Transform> newTargets) //this should now get the list for all available targets
+//    {
+//        target = attack.ChooseTarget(newTargets);
+//        movement.MoveTo(target);
+//        currentState = EnemyState.Moving;
+//    }
+
+
+//    private IEnumerator AITick() //might need to switch to state pattern for more states.
+//    {
+//        while (true)
+//        {
+//            switch (currentState)
+//            {
+//                case EnemyState.Idle:
+//                    break;
+//                case EnemyState.Moving:
+//                    if (target != null && Vector3.Distance(target.position, transform.position) <= data.attackRange)
+//                    {
+//                        movement.StopMoving();
+//                        currentState = EnemyState.Attacking;
+//                    }
+//                    break;
+//                case EnemyState.Attacking:
+//                    if (target == null)
+//                    {
+//                        currentState = EnemyState.Idle;
+//                    }
+//                    else
+//                    {
+//                        attack.ExecuteAttack(data);
+
+//                        yield return new WaitForSeconds(data.attackCooldown);
+//                        continue;
+//                    }
+
+//                    break;
+
+//            }
+
+//            yield return new WaitForSeconds(0.2f);
+//        }
+//    }
+
+
+
+//    private void OnEnable()
+//    {
+//        EnemyManager.OnNextTower += GetNewTarget;
+//    }
+
+//    private void OnDisable()
+//    {
+//        EnemyManager.OnNextTower -= GetNewTarget;
+//    }
+
+//    private void OnDrawGizmos()
+//    {
+//        Gizmos.color = Color.red;
+//        Gizmos.DrawWireSphere(transform.position, data.attackRange);
+//    }
+//}
+
 using System.Collections;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
-public enum EnemyState
+public class EnemyController : MonoBehaviour
 {
-    Idle,
-    Moving,
-    Attacking
-}
+    public Transform baseTarget;   // The ultimate goal at the end of the map
 
-public class EnemyController : MonoBehaviour //tells a single enemy what to do
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public Transform target;
-    
-    [SerializeField] private EnemyData data; //this is reused in both attackstrategy and here, there might be a better way to do this
-    public EnemyState currentState = EnemyState.Idle;
+    [SerializeField] private EnemyData data;
+    public LayerMask towerLayer;
 
     private EnemyHealth health;
     private Movement movement;
-    private IAttackStrategy attack; //maybe make the enemies as types so that they can have different attacks? or just make the attack script more flexible with different attack types and values.
+    private IAttackStrategy attack;
 
     void Awake()
     {
         movement = GetComponent<Movement>();
-
         health = GetComponent<EnemyHealth>();
-        health.maxHealth = data.health;
+
+        if (data != null)
+        {
+            health.maxHealth = data.health;
+        }
 
         attack = GetComponent<IAttackStrategy>();
     }
 
-    void Start()
+    // Call this from your LevelManager right after you Instantiate the enemy
+    public void InitializePath(Transform endGoal)
     {
-        
+        baseTarget = endGoal;
+
+        // 1. Start moving toward the base immediately. 
+        // Because we never call movement.StopMoving(), it will never stop!
+        if (movement != null && baseTarget != null)
+        {
+            movement.MoveTo(baseTarget);
+        }
+
+        // 2. Start the targeting scanner
         StartCoroutine(AITick());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator AITick()
     {
-        
-    }
+        // Safety check to ensure InitializePath was called before running the loop
+        if (baseTarget == null) yield break;
 
-    void GetNewTarget(List<Transform> newTargets) //this should now get the list for all available targets
-    {
-        target = attack.ChooseTarget(newTargets);
-        movement.MoveTo(target);
-        currentState = EnemyState.Moving;
-    }
-
-
-    private IEnumerator AITick() //might need to switch to state pattern for more states.
-    {
         while (true)
         {
-            switch (currentState)
+            // 1. Scan for towers within hitting distance
+            Collider[] towersInRange = Physics.OverlapSphere(transform.position, data.attackRange, towerLayer);
+
+            if (towersInRange.Length > 0)
             {
-                case EnemyState.Idle:
-                    break;
-                case EnemyState.Moving:
-                    if (target != null && Vector3.Distance(target.position, transform.position) <= data.attackRange)
-                    {
-                        movement.StopMoving();
-                        currentState = EnemyState.Attacking;
-                    }
-                    break;
-                case EnemyState.Attacking:
-                    if (target == null)
-                    {
-                        currentState = EnemyState.Idle;
-                    }
-                    else
-                    {
-                        attack.ExecuteAttack(data);
+                List<Transform> towerTransforms = new List<Transform>();
+                foreach (Collider col in towersInRange)
+                {
+                    towerTransforms.Add(col.transform);
+                }
 
-                        yield return new WaitForSeconds(data.attackCooldown);
-                        continue;
-                    }
+                // 2. Let the strategy pick the specific tower
+                Transform attackTarget = attack.ChooseTarget(towerTransforms);
 
-                    break;
+                if (attackTarget != null)
+                {
+                    // 3. FIRE ON THE MOVE!
+                    attack.ExecuteAttack(data);
 
+                    // Wait for the full cooldown before they can shoot again
+                    yield return new WaitForSeconds(data.attackCooldown);
+                    continue; // Skip the 0.1f wait below and start the loop over
+                }
             }
 
-            yield return new WaitForSeconds(0.2f);
+            // Fast tick rate for snappy detection while walking
+            yield return new WaitForSeconds(0.1f);
         }
-    }
-
-
-    
-    private void OnEnable()
-    {
-        EnemyManager.OnNextTower += GetNewTarget;
-    }
-
-    private void OnDisable()
-    {
-        EnemyManager.OnNextTower -= GetNewTarget;
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, data.attackRange);
+        if (data != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, data.attackRange);
+        }
     }
 }

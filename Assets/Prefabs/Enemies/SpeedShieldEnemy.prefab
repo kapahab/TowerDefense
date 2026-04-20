@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6771924098156215729}
   - component: {fileID: 3481952642005881824}
   m_Layer: 6
-  m_Name: health
+  m_Name: health UI Debug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -223,8 +223,9 @@ GameObject:
   - component: {fileID: 1461598220033189565}
   - component: {fileID: 2203972520823786816}
   - component: {fileID: 2798032864087143643}
+  - component: {fileID: 9157482510759192279}
   m_Layer: 6
-  m_Name: enemy
+  m_Name: SpeedShieldEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -356,9 +357,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9734cbdfd3e012478a04a622c624c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  baseTarget: {fileID: 0}
   data: {fileID: 11400000, guid: 2847cd5324f0bda46b54d019600f5805, type: 2}
-  currentState: 0
+  towerLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!114 &8880022535868166987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
+  currentHealth: 0
 --- !u!114 &1461598220033189565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,3 +441,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldValue: 15
+--- !u!114 &9157482510759192279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739464271909638667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e3eeef2658694245b59aaf8b5efbe79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shieldCharges: 1
+  requiredHits: 20
+  timeFrameInSeconds: 3

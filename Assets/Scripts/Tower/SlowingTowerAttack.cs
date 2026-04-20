@@ -17,7 +17,7 @@ public class SlowingTowerAttack : MonoBehaviour, ITowerAttackStrategy
     {
         if (target != null)
         {
-            target.TakeDamage(data.attackDamage);            
+            target.TakeDamage(data.attackDamage);
         }
         if (targetSlowable != null)
         {
