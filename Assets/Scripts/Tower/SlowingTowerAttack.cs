@@ -13,7 +13,7 @@ public class SlowingTowerAttack : MonoBehaviour, ITowerAttackStrategy
         targetSlowable = potentialTargets[0].GetComponent<ISlowable>();
     }
 
-    public void ExecuteAttack(TowerData data)
+    public void ExecuteAttack(TowerDataInstance data)
     {
         if (target != null)
         {

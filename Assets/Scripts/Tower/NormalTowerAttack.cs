@@ -10,7 +10,7 @@ public class NormalTowerAttack : MonoBehaviour, ITowerAttackStrategy
         target = potentialTargets[0].GetComponent<IDamageable>();
     }
 
-    public void ExecuteAttack(TowerData data)
+    public void ExecuteAttack(TowerDataInstance data)
     {
         if (target != null)
             target.TakeDamage(data.attackDamage);

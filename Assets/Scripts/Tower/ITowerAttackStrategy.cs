@@ -4,5 +4,5 @@ using UnityEngine;
 public interface ITowerAttackStrategy 
 {
     public void ChooseTarget(Collider[] potentialTargets);
-    public void ExecuteAttack(TowerData data);
+    public void ExecuteAttack(TowerDataInstance data);
 }

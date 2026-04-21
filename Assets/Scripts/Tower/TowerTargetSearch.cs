@@ -7,13 +7,20 @@ public class TowerTargetSearch : MonoBehaviour
 
     public LayerMask enemyLayer;
 
-    [SerializeField] private TowerData towerData;
+    [SerializeField] public TowerData towerData;
+    private TowerDataInstance towerDataInst = new TowerDataInstance();
 
     private ITowerAttackStrategy attackStrategy;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         attackStrategy = GetComponent<ITowerAttackStrategy>();
+
+        if (towerData != null)
+        {
+            towerDataInst.InitializeFromBlueprint(towerData);
+        }
+
         StartCoroutine(TowerSearchTick());
     }
 
@@ -27,16 +34,16 @@ public class TowerTargetSearch : MonoBehaviour
     {
         while (true)
         {
-            enemiesInRange = Physics.OverlapSphere(transform.position, towerData.attackRange, enemyLayer);
+            enemiesInRange = Physics.OverlapSphere(transform.position, towerDataInst.attackRange, enemyLayer);
 
             if (enemiesInRange.Length > 0)
             {
                 // 1. Enemy found! Execute the strategy.
                 attackStrategy.ChooseTarget(enemiesInRange);
-                attackStrategy.ExecuteAttack(towerData);
+                attackStrategy.ExecuteAttack(towerDataInst);
 
                 // 2. Go on cooldown. The tower cannot shoot or search again until this is over.
-                yield return new WaitForSeconds(towerData.attackCooldown);
+                yield return new WaitForSeconds(towerDataInst.attackCooldown);
             }
             else
             {

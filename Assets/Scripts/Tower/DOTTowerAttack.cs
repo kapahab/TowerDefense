@@ -12,12 +12,12 @@ public class DOTTowerAttack : MonoBehaviour, ITowerAttackStrategy
         target = potentialTargets[0].GetComponent<IDamageable>();
     }
 
-    public void ExecuteAttack(TowerData data)
+    public void ExecuteAttack(TowerDataInstance data)
     {
         StartCoroutine(DamageTick(data));
     }
 
-    IEnumerator DamageTick(TowerData data)
+    IEnumerator DamageTick(TowerDataInstance data)
     {
         for (int i = 0; i < damageTickAmount; i++)
         {

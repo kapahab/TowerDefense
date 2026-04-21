@@ -10,7 +10,7 @@ public class AreaTowerAttack : MonoBehaviour, ITowerAttackStrategy
         targetsToHit = potentialTargets;
     }
 
-    public void ExecuteAttack(TowerData data)
+    public void ExecuteAttack(TowerDataInstance data)
     {
         if (targetsToHit == null || targetsToHit.Length == 0) return;
 

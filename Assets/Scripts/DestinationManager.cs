@@ -5,14 +5,14 @@ using UnityEngine.AI;
 public class DestinationManager : MonoBehaviour
 {
     [SerializeField] private Transform startPoint;
-    public static Action OnEnemyReachedDestination;
+    public static Action<int> OnEnemyReachedDestination;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
             Debug.Log("enemy entered trigger");
             TeleportToStartingPoint(other.gameObject);
-            OnEnemyReachedDestination?.Invoke();
+            OnEnemyReachedDestination?.Invoke(1); //every enemy damages one
         }
     }
 
