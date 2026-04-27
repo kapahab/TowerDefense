@@ -13,26 +13,27 @@ public class SpawnOnDeath : MonoBehaviour
     // We call this right before the parent is destroyed
     public void SpawnChildren()
     {
-        // 1. Grab the parent's target base so we can pass it to the children
         EnemyController parentController = GetComponent<EnemyController>();
         Transform targetBase = parentController != null ? parentController.baseTarget : null;
+        Transform[] parentPath = parentController != null ? parentController.currentPath : null;
+
+        // NEW: Grab the exact waypoint index the parent was walking towards
+        int parentIndex = parentController != null ? parentController.GetWaypointIndex() : 0;
 
         for (int i = 0; i < spawnCount; i++)
         {
-            // 2. Calculate a small random offset so they don't spawn inside each other
             Vector2 randomCircle = Random.insideUnitCircle * spawnRadius;
             Vector3 spawnPos = transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
 
-            // 3. Spawn the child!
             GameObject child = Instantiate(enemyPrefabToSpawn, spawnPos, Quaternion.identity);
 
-            // 4. Give the child its marching orders
-            if (targetBase != null)
+            if (targetBase != null && parentPath != null)
             {
                 EnemyController childController = child.GetComponent<EnemyController>();
                 if (childController != null)
                 {
-                    childController.InitializePath(targetBase);
+                    // NEW: Pass the parent's index so the baby resumes the exact same route!
+                    childController.InitializePath(parentPath, targetBase, parentIndex);
                 }
             }
         }

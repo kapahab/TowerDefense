@@ -122,6 +122,8 @@ public class EnemyController : MonoBehaviour
     private Movement movement;
     private IAttackStrategy attack;
 
+    public Transform[] currentPath;
+
     void Awake()
     {
         movement = GetComponent<Movement>();
@@ -136,19 +138,24 @@ public class EnemyController : MonoBehaviour
     }
 
     // Call this from your LevelManager right after you Instantiate the enemy
-    public void InitializePath(Transform endGoal)
+    public void InitializePath(Transform[] fullPath, Transform endGoal, int startingWaypointIndex = 0)
     {
+        currentPath = fullPath;
         baseTarget = endGoal;
 
-        // 1. Start moving toward the base immediately. 
-        // Because we never call movement.StopMoving(), it will never stop!
-        if (movement != null && baseTarget != null)
+        if (movement != null && fullPath != null)
         {
-            movement.MoveTo(baseTarget);
+            // Pass it to the movement script
+            movement.SetPath(fullPath, startingWaypointIndex);
         }
 
-        // 2. Start the targeting scanner
         StartCoroutine(AITick());
+    }
+
+    // Add this helper so the SpawnOnDeath script can ask the controller for the index
+    public int GetWaypointIndex()
+    {
+        return movement != null ? movement.GetCurrentWaypointIndex() : 0;
     }
 
     private IEnumerator AITick()

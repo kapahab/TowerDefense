@@ -29,6 +29,7 @@ public class LevelManager : MonoBehaviour
     [Header("Map Setup")]
     public Transform spawnPoint; // Where enemies appear
     public Transform baseTarget; // Where enemies are trying to walk to
+    public Transform[] fullPath;
 
     [Header("Wave Configuration")]
     public List<Wave> waves;
@@ -77,6 +78,6 @@ public class LevelManager : MonoBehaviour
         // Instantiate the enemy at the spawn point
         GameObject enemy = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
 
-        enemy.GetComponent<EnemyController>().InitializePath(baseTarget);
+        enemy.GetComponent<EnemyController>().InitializePath(fullPath, baseTarget);
     }
 }
