@@ -58,7 +58,7 @@ public class Cell : MonoBehaviour
 
     public void InstantiateTower(GameObject towerPrefab)
     {
-        towerInstance = Instantiate(towerPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+        towerInstance = Instantiate(towerPrefab, transform.position, Quaternion.identity);
         OnTowerSpawned?.Invoke(towerInstance);
         occupied = true;
         meshFilter.mesh = null;

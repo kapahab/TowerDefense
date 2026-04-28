@@ -60,13 +60,13 @@ public class Movement : MonoBehaviour, ISlowable
 
     [Header("Overtaking & Spacing (Soft Collision)")]
     [Tooltip("How far away they push each other to slide past slow units")]
-    public float separationRadius = 5f;
+    public float separationRadius = 1f;
     public float separationForce = 4f;
     public LayerMask enemyLayer;
 
     [Header("Organic Variety")]
     [Tooltip("Shifts them slightly left/right so they don't walk in a perfect single-file line")]
-    public float laneOffsetAmount = 1f;
+    public float laneOffsetAmount = 0.15f;
     private Vector3 personalLaneOffset;
 
     void Start()
