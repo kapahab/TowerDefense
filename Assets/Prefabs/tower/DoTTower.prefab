@@ -357,5 +357,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 755a84c38f416064bbdf54a02061ef2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageTickAmount: 3
-  damageTickDuration: 0.1
+  totalDotDamage: 15
+  dotDuration: 3
+  damageTicks: 3
+  projectilePrefab: {fileID: 6473445995281690145, guid: 935e53bf864ccfc47b522a1bff5ed7dd, type: 3}
+  dotStatusPrefab: {fileID: 5972580186302700232, guid: 4e529ad14585a9148817159a7d3fe014, type: 3}
+  firePoint: {fileID: 1302898724143189622}
+  bubbleFloatHeight: 1.5
+  childBobAmount: 0.2
+  childBobSpeed: 0.4
+  attackSound: {fileID: 8300000, guid: 58e00494eae240d42a317762541c4404, type: 3}

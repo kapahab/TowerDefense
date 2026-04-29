@@ -1248,8 +1248,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrowVisualPrefab: {fileID: 5693147730302534939, guid: 99d340efe3ebadc43959a04b7c77501a, type: 3}
-  explosionPrefab: {fileID: 5162910912013668194, guid: cf82839c411151342a7b2337bda9fb34, type: 3}
   firePoint: {fileID: 1302898724143189622}
+  attackSound: {fileID: 8300000, guid: 5cbba63c84265e5408c0bbaae901cf9e, type: 3}
 --- !u!114 &8722398617168811119
 MonoBehaviour:
   m_ObjectHideFlags: 0

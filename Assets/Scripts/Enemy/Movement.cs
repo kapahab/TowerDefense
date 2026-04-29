@@ -1,48 +1,3 @@
-//using System.Collections;
-//using UnityEngine;
-//using UnityEngine.AI;
-
-//public class Movement : MonoBehaviour, ISlowable
-//{
-//    [SerializeField] NavMeshAgent agent;
-//    bool isSlowed = false;
-//    // Start is called once before the first execution of Update after the MonoBehaviour is created
-//    void Start()
-//    { }
-
-//    // Update is called once per frame
-//    void Update()
-//    {
-
-//    }
-
-//    public void MoveTo(Transform targetTransform)
-//    {
-//        agent.isStopped = false;
-//        agent.SetDestination(targetTransform.position);
-//    }
-
-//    public void StopMoving()
-//    {
-//        agent.isStopped = true;
-//    }
-
-//    public void Slow(float slowAmount, float slowDuration)
-//    {
-//        if (isSlowed) return; // Prevent stacking slows
-//        StartCoroutine(SlowCoroutine(slowAmount, slowDuration));
-//    }
-
-//    IEnumerator SlowCoroutine(float slowAmount, float slowDuration)
-//    {
-//        isSlowed = true;
-//        float originalSpeed = agent.speed;
-//        agent.speed *= (1 - slowAmount);
-//        yield return new WaitForSeconds(slowDuration);
-//        agent.speed = originalSpeed;
-//        isSlowed = false;
-//    }
-//}
 using System.Collections;
 using UnityEngine;
 
@@ -69,12 +24,19 @@ public class Movement : MonoBehaviour, ISlowable
     public float laneOffsetAmount = 0.15f;
     private Vector3 personalLaneOffset;
 
+    [Header("Footstep Audio (Optimized)")]
+    [Tooltip("Drag the AudioSource component attached to this enemy here")]
+    public AudioSource footstepSource;
+    [Tooltip("Drop 3 or 4 different footstep sounds here so they don't sound like a machine gun")]
+    public AudioClip[] footstepClips;
+    [Tooltip("How often the footstep sound plays in seconds")]
+    public float footstepInterval = 0.5f;
+    private float footstepTimer = 0f;
+
     void Start()
     {
-        // NO MORE SPEED VARIANCE! Everyone walks at the exact same pace.
         currentSpeed = baseSpeed;
 
-        // We keep the lane offset so they still look like an organic crowd
         personalLaneOffset = new Vector3(
             Random.Range(-laneOffsetAmount, laneOffsetAmount),
             0,
@@ -86,7 +48,16 @@ public class Movement : MonoBehaviour, ISlowable
     {
         if (isStopped || path == null || currentWaypointIndex >= path.Length) return;
 
-        // --- 1. OVERTAKING / SIDEWAYS SLIDE ---
+        // 1. CALCULATE THE TARGET FIRST 
+        Vector3 targetPos = path[currentWaypointIndex].position + personalLaneOffset;
+        Vector3 exactCenter = new Vector3(targetPos.x, transform.position.y, targetPos.z);
+
+        // 2. FIND THE TRUE "SIDEWAYS" OF THE ROAD 
+        Vector3 roadDirection = (exactCenter - transform.position).normalized;
+        if (roadDirection == Vector3.zero) roadDirection = transform.forward;
+        Vector3 roadRight = Vector3.Cross(Vector3.up, roadDirection).normalized;
+
+        // --- 3. OVERTAKING / SIDEWAYS SLIDE ---
         Vector3 pushForce = Vector3.zero;
         Collider[] neighbors = Physics.OverlapSphere(transform.position, separationRadius, enemyLayer);
 
@@ -98,35 +69,26 @@ public class Movement : MonoBehaviour, ISlowable
                 directionAway.y = 0;
                 float distance = directionAway.magnitude;
 
-                // Anti-stuck logic for Matryoshka babies spawning on exact same pixel
                 if (distance < 0.001f)
                 {
-                    directionAway = transform.right * (Random.value > 0.5f ? 1f : -1f);
+                    directionAway = roadRight * (Random.value > 0.5f ? 1f : -1f);
                     distance = 0.01f;
                 }
 
                 float pushPower = (separationRadius - distance) / separationRadius;
 
-                // Only allow them to slide left and right (never forward/backward)
-                float sidewaysDot = Vector3.Dot(directionAway.normalized, transform.right);
-                Vector3 sidewaysPush = transform.right * sidewaysDot;
+                float sidewaysDot = Vector3.Dot(directionAway.normalized, roadRight);
+                Vector3 sidewaysPush = roadRight * sidewaysDot;
 
                 pushForce += sidewaysPush * pushPower;
             }
         }
 
-        // Apply the slide
         transform.position += pushForce * separationForce * Time.deltaTime;
 
-
-        // --- 2. FORWARD MOVEMENT ---
-        Vector3 targetPos = path[currentWaypointIndex].position + personalLaneOffset;
-        Vector3 exactCenter = new Vector3(targetPos.x, transform.position.y, targetPos.z);
-
-        // Move forward at exactly currentSpeed
+        // --- 4. FORWARD MOVEMENT ---
         transform.position = Vector3.MoveTowards(transform.position, exactCenter, currentSpeed * Time.deltaTime);
 
-        // Snap rotation to face exactly where we are walking
         Vector3 direction = exactCenter - transform.position;
         if (direction != Vector3.zero)
         {
@@ -137,9 +99,35 @@ public class Movement : MonoBehaviour, ISlowable
         {
             currentWaypointIndex++;
         }
+
+        // --- 5. AUDIO FOOTSTEPS ---
+        HandleFootsteps();
     }
 
-    // --- YOUR HELPERS AND SLOW MECHANICS (Untouched) ---
+    private void HandleFootsteps()
+    {
+        // Safety check: Do we have sounds and a speaker to play them from?
+        if (footstepClips == null || footstepClips.Length == 0 || footstepSource == null) return;
+
+        footstepTimer -= Time.deltaTime;
+
+        if (footstepTimer <= 0f)
+        {
+            // Pick a completely random clip from the array
+            AudioClip randomClip = footstepClips[Random.Range(0, footstepClips.Length)];
+
+            // Tweak the pitch and volume slightly every single step for maximum organic variety
+            footstepSource.pitch = Random.Range(0.85f, 1.15f);
+            footstepSource.volume = Random.Range(0.2f, 0.35f);
+
+            // Play the sound through the existing component. ZERO instantiating!
+            footstepSource.PlayOneShot(randomClip);
+
+            float speedMultiplier = baseSpeed / currentSpeed;
+            footstepTimer = footstepInterval * speedMultiplier;
+        }
+    }
+
     public void SetPath(Transform[] newPath, int startingIndex = 0)
     {
         path = newPath;

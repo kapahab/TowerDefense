@@ -7,10 +7,10 @@ public class NormalTowerAttack : MonoBehaviour, ITowerAttackStrategy
     [Header("Visuals")]
     public GameObject arrowVisualPrefab;
 
-    // NEW: Add a slot for your explosion!
-    public GameObject explosionPrefab;
-
     public Transform firePoint;
+
+    [Header("Audio")]
+    public AudioClip attackSound;
 
     private IDamageable targetDamageable;
     private Transform targetTransform;
@@ -32,6 +32,7 @@ public class NormalTowerAttack : MonoBehaviour, ITowerAttackStrategy
             float distance = Vector3.Distance(firePoint.position, targetTransform.position);
             float timeToHit = distance / visualScript.speed;
 
+            PlayAttackSound();
             StartCoroutine(DealDamageAfterDelay(data.attackDamage, timeToHit));
         }
     }
@@ -42,18 +43,15 @@ public class NormalTowerAttack : MonoBehaviour, ITowerAttackStrategy
 
         if (targetTransform != null)
         {
-            // NEW: Spawn the explosion directly on the enemy's chest!
-            if (explosionPrefab != null)
-            {
-                // We add Vector3.up * 0.5f so the explosion happens on their body, not at their feet
-                Vector3 hitPoint = targetTransform.position + (Vector3.up * 0.5f);
-
-                // Spawn it, and tell Unity to delete the explosion object after 2 seconds so it doesn't clutter your game
-                GameObject boom = Instantiate(explosionPrefab, hitPoint, Quaternion.identity);
-                Destroy(boom, 2f);
-            }
-
             targetDamageable.TakeDamage(damage);
+        }
+    }
+
+    public void PlayAttackSound()
+    {
+        if (attackSound != null && SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(attackSound, 1f, true);
         }
     }
 }

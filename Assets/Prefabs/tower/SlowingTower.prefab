@@ -359,3 +359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slowAmount: 0.5
   slowDuration: 5
+  projectilePrefab: {fileID: 8640784760403566405, guid: 9bd4addfa16a2de479edf6132068f279, type: 3}
+  firePoint: {fileID: 1302898724143189622}
+  slowStatusPrefab: {fileID: 5260096696107491895, guid: a1bf16b1e839d9a4f96b43df2b851d62, type: 3}
+  attackSound: {fileID: 8300000, guid: cbf534cb74d3c214888216a6d34f7dee, type: 3}

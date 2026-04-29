@@ -357,3 +357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aea7b3b7cda2234aa10b14b893e4b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arcProjectilePrefab: {fileID: 8270498642340732200, guid: 36c6ac4211c2a21418fac22c94bf2e62, type: 3}
+  explosionCraterPrefab: {fileID: 0}
+  firePoint: {fileID: 1302898724143189622}
+  attackSound: {fileID: 8300000, guid: 373aadb50f9d16f41b2b69b4763903aa, type: 3}
