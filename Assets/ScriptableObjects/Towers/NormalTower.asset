@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: NormalTower
   m_EditorClassIdentifier: 
   towerName: normal Tower
+  towerIcon: {fileID: 0}
+  towerTier: 1
   health: 100
   attackDamage: 15
-  attackRange: 5
+  attackRange: 2.5
   attackCooldown: 2
+  goldGenerated: 0
+  generationInterval: 0
+  upgradePool: []

@@ -17,6 +17,8 @@ MonoBehaviour:
   towerTier: 1
   health: 0
   attackDamage: 0
-  attackRange: 0
+  attackRange: 2.5
   attackCooldown: 0
+  goldGenerated: 0
+  generationInterval: 0
   upgradePool: []
