@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,22 +24,30 @@ public class Wave
     public float timeBeforeNextWave = 10f;
 }
 
-// 3. THE MANAGER
+
+
+// [Wave and WaveSegment classes remain exactly the same...]
+
 public class LevelManager : MonoBehaviour
 {
     [Header("Map Setup")]
-    public Transform spawnPoint; // Where enemies appear
-    public Transform baseTarget; // Where enemies are trying to walk to
+    public Transform spawnPoint;
+    public Transform baseTarget;
     public Transform[] fullPath;
 
     [Header("Wave Configuration")]
     public List<Wave> waves;
 
     private int currentWaveIndex = 0;
+    private List<GameObject> activeEnemies = new List<GameObject>();
+
+    // NEW: We need to know when the spawner is completely done
+    private bool allWavesSpawned = false;
+
+    public static Action OnGameWon;
 
     void Start()
     {
-        // Start the level!
         StartCoroutine(RunLevel());
     }
 
@@ -49,9 +58,6 @@ public class LevelManager : MonoBehaviour
             currentWaveIndex = w;
             Wave currentWave = waves[w];
 
-            Debug.Log($"Starting {currentWave.waveName}!");
-
-            // Go through each segment in the current wave
             foreach (WaveSegment segment in currentWave.segments)
             {
                 for (int i = 0; i < segment.count; i++)
@@ -61,23 +67,63 @@ public class LevelManager : MonoBehaviour
                 }
             }
 
-            // The wave has finished spawning. 
-            // Wait out the timer before starting the next wave in the list.
             if (w < waves.Count - 1)
             {
-                Debug.Log($"Wave finished spawning! Next wave in {currentWave.timeBeforeNextWave} seconds...");
                 yield return new WaitForSeconds(currentWave.timeBeforeNextWave);
             }
         }
 
-        Debug.Log("All waves have been spawned! Level complete.");
+        Debug.Log("All waves have been spawned!");
+
+        // NEW: Tell the manager it's finally allowed to check for a win!
+        allWavesSpawned = true;
+
+        // Edge Case: What if the towers killed the very last enemy exactly as it spawned? 
+        // We do one final check here just in case.
+        if (activeEnemies.Count == 0)
+        {
+            OnGameWon?.Invoke();
+        }
     }
 
     void SpawnEnemy(GameObject prefab)
     {
-        // Instantiate the enemy at the spawn point
         GameObject enemy = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
-
         enemy.GetComponent<EnemyController>().InitializePath(fullPath, baseTarget);
+
+        // 1. Add them to our tracker list! (Your previous code forgot to actually add them)
+        activeEnemies.Add(enemy);
+
+        // 2. Subscribe to their death event!
+        // (Assuming your enemy health script is called EnemyHealth and has an event that passes itself)
+        EnemyHealth healthScript = enemy.GetComponent<EnemyHealth>();
+        if (healthScript != null)
+        {
+            healthScript.OnEnemyDied += HandleEnemyDeath;
+        }
+    }
+
+    // This gets called the moment the enemy's health hits 0
+    void HandleEnemyDeath(GameObject deadEnemy)
+    {
+        // 1. UNSUBSCRIBE IMMEDIATELY! This prevents memory leaks when the enemy is Destroy()'d a millisecond later.
+        EnemyHealth healthScript = deadEnemy.GetComponent<EnemyHealth>();
+        if (healthScript != null)
+        {
+            healthScript.OnEnemyDied -= HandleEnemyDeath;
+        }
+
+        // 2. Remove them from the active roster
+        if (activeEnemies.Contains(deadEnemy))
+        {
+            activeEnemies.Remove(deadEnemy);
+        }
+
+        // 3. Check for the Win Condition safely!
+        if (allWavesSpawned && activeEnemies.Count == 0)
+        {
+            Debug.Log("Level Beaten!");
+            OnGameWon?.Invoke();
+        }
     }
 }
