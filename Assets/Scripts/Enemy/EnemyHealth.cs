@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour, IDamageable
@@ -6,6 +7,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public float currentHealth;
 
     private Shield[] activeShields;
+
+    public Action<GameObject> OnEnemyDied;
 
     void Start()
     {
@@ -37,7 +40,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (currentHealth <= 0)
         {
             Debug.Log("Enemy destroyed!");
-
+            OnEnemyDied?.Invoke(this.gameObject);
             EnemyLoot loot = GetComponent<EnemyLoot>();
             if (loot != null) loot.DropGold();
 
