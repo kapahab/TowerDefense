@@ -7,6 +7,8 @@ using UnityEngine;
 public class TowerData : ScriptableObject
 {
     public string towerName;
+    public Sprite towerIcon;
+    [Range(1, 3)] public int towerTier = 1;
     public float health;
     public float attackDamage;
     public float attackRange;
