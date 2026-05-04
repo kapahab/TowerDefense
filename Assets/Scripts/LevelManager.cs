@@ -3,7 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 1. WAVE SEGMENT: A specific group of enemies (e.g., "5 fast enemies spawning 1 second apart")
+[System.Serializable]
+public class RouteConfig
+{
+    public string routeName = "Route 1";
+    public Transform spawnPoint;
+    public Transform[] fullPath;
+    public Transform baseTarget;
+}
+
 [System.Serializable]
 public class WaveSegment
 {
@@ -11,29 +19,26 @@ public class WaveSegment
     public int count;
     [Tooltip("Time to wait between spawning each enemy in this group")]
     public float spawnDelay = 1f;
+
+    [Header("Routing")]
+    public int routeIndex = 0;
 }
 
-// 2. WAVE: The full wave, which can contain multiple segments
 [System.Serializable]
 public class Wave
 {
     public string waveName = "Wave 1";
     public List<WaveSegment> segments;
-
-    [Tooltip("Time to wait before the NEXT wave starts")]
     public float timeBeforeNextWave = 10f;
 }
 
-
-
-// [Wave and WaveSegment classes remain exactly the same...]
-
 public class LevelManager : MonoBehaviour
 {
+    // NEW: Singleton Instance so spawned babies can talk to the manager!
+    public static LevelManager Instance { get; private set; }
+
     [Header("Map Setup")]
-    public Transform spawnPoint;
-    public Transform baseTarget;
-    public Transform[] fullPath;
+    public List<RouteConfig> availableRoutes;
 
     [Header("Wave Configuration")]
     public List<Wave> waves;
@@ -41,13 +46,25 @@ public class LevelManager : MonoBehaviour
     private int currentWaveIndex = 0;
     private List<GameObject> activeEnemies = new List<GameObject>();
 
-    // NEW: We need to know when the spawner is completely done
     private bool allWavesSpawned = false;
 
     public static Action OnGameWon;
 
+    void Awake()
+    {
+        // Singleton Setup
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
     void Start()
     {
+        if (availableRoutes == null || availableRoutes.Count == 0)
+        {
+            Debug.LogError("LevelManager has no routes assigned!");
+            return;
+        }
+
         StartCoroutine(RunLevel());
     }
 
@@ -60,9 +77,17 @@ public class LevelManager : MonoBehaviour
 
             foreach (WaveSegment segment in currentWave.segments)
             {
+                int safeRouteIndex = segment.routeIndex;
+                if (safeRouteIndex < 0 || safeRouteIndex >= availableRoutes.Count)
+                {
+                    safeRouteIndex = 0;
+                }
+
+                RouteConfig selectedRoute = availableRoutes[safeRouteIndex];
+
                 for (int i = 0; i < segment.count; i++)
                 {
-                    SpawnEnemy(segment.enemyPrefab);
+                    SpawnEnemy(segment.enemyPrefab, selectedRoute);
                     yield return new WaitForSeconds(segment.spawnDelay);
                 }
             }
@@ -74,28 +99,26 @@ public class LevelManager : MonoBehaviour
         }
 
         Debug.Log("All waves have been spawned!");
-
-        // NEW: Tell the manager it's finally allowed to check for a win!
         allWavesSpawned = true;
 
-        // Edge Case: What if the towers killed the very last enemy exactly as it spawned? 
-        // We do one final check here just in case.
-        if (activeEnemies.Count == 0)
-        {
-            OnGameWon?.Invoke();
-        }
+        // Trigger the safe check instead of doing it instantly
+        StartCoroutine(CheckWinConditionSafely());
     }
 
-    void SpawnEnemy(GameObject prefab)
+    void SpawnEnemy(GameObject prefab, RouteConfig route)
     {
-        GameObject enemy = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
-        enemy.GetComponent<EnemyController>().InitializePath(fullPath, baseTarget);
+        GameObject enemy = Instantiate(prefab, route.spawnPoint.position, route.spawnPoint.rotation);
+        enemy.GetComponent<EnemyController>().InitializePath(route.fullPath, route.baseTarget);
 
-        // 1. Add them to our tracker list! (Your previous code forgot to actually add them)
+        // Use our new public registration method!
+        RegisterEnemy(enemy);
+    }
+
+    // NEW: A public method that ANY script (like SpawnOnDeath) can call to add an enemy to the tracker
+    public void RegisterEnemy(GameObject enemy)
+    {
         activeEnemies.Add(enemy);
 
-        // 2. Subscribe to their death event!
-        // (Assuming your enemy health script is called EnemyHealth and has an event that passes itself)
         EnemyHealth healthScript = enemy.GetComponent<EnemyHealth>();
         if (healthScript != null)
         {
@@ -103,23 +126,29 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    // This gets called the moment the enemy's health hits 0
     void HandleEnemyDeath(GameObject deadEnemy)
     {
-        // 1. UNSUBSCRIBE IMMEDIATELY! This prevents memory leaks when the enemy is Destroy()'d a millisecond later.
         EnemyHealth healthScript = deadEnemy.GetComponent<EnemyHealth>();
         if (healthScript != null)
         {
             healthScript.OnEnemyDied -= HandleEnemyDeath;
         }
 
-        // 2. Remove them from the active roster
         if (activeEnemies.Contains(deadEnemy))
         {
             activeEnemies.Remove(deadEnemy);
         }
 
-        // 3. Check for the Win Condition safely!
+        // Use the safe checker!
+        StartCoroutine(CheckWinConditionSafely());
+    }
+
+    // NEW: This waits until the absolute end of the Unity frame before checking for a win.
+    // This guarantees that if a parent dies and spawns babies, the babies have time to Register before we count to 0!
+    private IEnumerator CheckWinConditionSafely()
+    {
+        yield return new WaitForEndOfFrame();
+
         if (allWavesSpawned && activeEnemies.Count == 0)
         {
             Debug.Log("Level Beaten!");

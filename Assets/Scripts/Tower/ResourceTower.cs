@@ -1,26 +1,29 @@
 using System.Collections;
 using UnityEngine;
 
-public class ResourceTower : MonoBehaviour
+public class ResourceTower : MonoBehaviour, ITowerDataContainer
 {
-    public int goldPerInterval = 10; // Amount of gold generated per interval
+    public TowerData data; // Reference to the tower data
+    private TowerDataInstance dataIns;
     void Start()
     {
+        dataIns = new TowerDataInstance();
+        dataIns.InitializeFromBlueprint(data);
         StartCoroutine(GenerateResource());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     IEnumerator GenerateResource()
     {
         while (true)
         {
-            EconomyManager.AddGold(goldPerInterval);
-            yield return new WaitForSeconds(5f); 
+            EconomyManager.AddGold(dataIns.goldGenerated);
+            yield return new WaitForSeconds(dataIns.generationInterval); 
         }
+    }
+
+    public TowerDataInstance GetTowerDataInstance()
+    {
+        return dataIns;
     }
 }

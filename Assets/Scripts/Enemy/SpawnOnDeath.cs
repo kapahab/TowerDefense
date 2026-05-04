@@ -17,7 +17,6 @@ public class SpawnOnDeath : MonoBehaviour
         Transform targetBase = parentController != null ? parentController.baseTarget : null;
         Transform[] parentPath = parentController != null ? parentController.currentPath : null;
 
-        // NEW: Grab the exact waypoint index the parent was walking towards
         int parentIndex = parentController != null ? parentController.GetWaypointIndex() : 0;
 
         for (int i = 0; i < spawnCount; i++)
@@ -32,9 +31,14 @@ public class SpawnOnDeath : MonoBehaviour
                 EnemyController childController = child.GetComponent<EnemyController>();
                 if (childController != null)
                 {
-                    // NEW: Pass the parent's index so the baby resumes the exact same route!
                     childController.InitializePath(parentPath, targetBase, parentIndex);
                 }
+            }
+
+            // THE FIX: Tell the LevelManager that a new enemy just entered the game!
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.RegisterEnemy(child);
             }
         }
 

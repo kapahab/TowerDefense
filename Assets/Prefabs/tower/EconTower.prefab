@@ -343,6 +343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldPerInterval: 10
+  data: {fileID: 11400000, guid: 7d8666ec328e7ce4a88c640e76e61839, type: 2}
 --- !u!114 &-5377746868660281590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -355,7 +356,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4dc2c17ff1a8f49b76941a4281e042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerTargetSearch: {fileID: 0}
 --- !u!114 &-2847361539092246584
 MonoBehaviour:
   m_ObjectHideFlags: 0

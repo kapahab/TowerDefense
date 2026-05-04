@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class TowerTargetSearch : MonoBehaviour
+public class TowerTargetSearch : MonoBehaviour, ITowerDataContainer
 {
     private Collider[] enemiesInRange;
 
@@ -24,10 +24,9 @@ public class TowerTargetSearch : MonoBehaviour
         StartCoroutine(TowerSearchTick());
     }
 
-    // Update is called once per frame
-    void Update()
+    public TowerDataInstance GetTowerDataInstance()
     {
-
+        return towerDataInst;
     }
 
     IEnumerator TowerSearchTick()

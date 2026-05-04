@@ -3,25 +3,25 @@ using UnityEngine;
 public class TowerOnHover : MonoBehaviour
 {
     [Header("Tower Stats")]
-    [SerializeField] private TowerTargetSearch towerTargetSearch;
+    [SerializeField] private ITowerDataContainer dataInst;
 
     
 
     // Triggered the exact frame the mouse enters the collider
     private void Start()
     {
-        towerTargetSearch = GetComponent<TowerTargetSearch>();
+        dataInst = GetComponent<ITowerDataContainer>();
     }
     private void OnMouseEnter()
     {
-        if (towerTargetSearch.towerDataInst == null)
+        if (dataInst.GetTowerDataInstance() == null)
         {
             Debug.LogError("TowerDataInstance is null! Make sure the TowerTargetSearch component is properly initialized.");
             return;
         }
-        TowerUIPanel.Instance.ShowTowerInfo(towerTargetSearch.towerDataInst.towerName, towerTargetSearch.towerDataInst.currentLevel,
-            towerTargetSearch.towerDataInst.attackDamage,
-            towerTargetSearch.towerDataInst.attackRange, towerTargetSearch.towerDataInst.attackCooldown);
+        TowerUIPanel.Instance.ShowTowerInfo(dataInst.GetTowerDataInstance().towerName, dataInst.GetTowerDataInstance().currentLevel,
+            dataInst.GetTowerDataInstance().attackDamage,
+            dataInst.GetTowerDataInstance().attackRange, dataInst.GetTowerDataInstance().attackCooldown);
 
     }
 
@@ -29,7 +29,7 @@ public class TowerOnHover : MonoBehaviour
     private void OnMouseExit()
     {
 
-        if (towerTargetSearch.towerDataInst == null)
+        if (dataInst.GetTowerDataInstance() == null)
         {
             Debug.LogError("TowerDataInstance is null! Make sure the TowerTargetSearch component is properly initialized.");
             return;

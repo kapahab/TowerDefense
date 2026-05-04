@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class GameManager : MonoBehaviour
 
     public static Action OnGameOver;
     public static Action<int> OnPlayerHurt;
+
+    public string nextSceneName;
+    public GameObject nextLevelUI;
 
     void Start()
     {
@@ -43,13 +47,23 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    void TriggerGameWon()
+    {
+        if (nextLevelUI == null)
+        {
+            SceneManager.LoadScene(nextSceneName);
+        }
+    }
+
     private void OnEnable()
     {
+        LevelManager.OnGameWon += TriggerGameWon;
         DestinationManager.OnEnemyReachedDestination += CheckIncomingDamage;
     }
 
     private void OnDisable()
     {
+        LevelManager.OnGameWon -= TriggerGameWon;
         DestinationManager.OnEnemyReachedDestination -= CheckIncomingDamage;
     }
 }
