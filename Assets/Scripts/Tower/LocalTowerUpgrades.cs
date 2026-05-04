@@ -4,7 +4,6 @@ using TMPro;
 using System.Collections.Generic;
 using System.Linq; // Required for shuffling the list
 
-// 1. DEFINE THE UPGRADE DATA STRUCTURE
 [System.Serializable]
 public class UpgradeChoice
 {
@@ -12,112 +11,78 @@ public class UpgradeChoice
     public string description = "+10 Dmg";
     public int cost = 50;
 
-    [Header("Stat Modifiers")]
+    [Header("Combat Stats")]
     public float bonusDamage;
     public float bonusRange;
     public float bonusFireRate;
+
+    [Header("Economy Stats")]
+    public int bonusGold;      // How much extra gold it makes
+    public float bonusSpeed;   // How much faster it prints money
 }
 
 // 2. THE MAIN SCRIPT
 [RequireComponent(typeof(Collider))] // Ensures you have a collider to click on
 public class LocalTowerUpgrades : MonoBehaviour
 {
-    [Header("Define Your Upgrades Here!")]
-    [Tooltip("Add all your possible upgrades for this specific tower type here.")]
+    [Header("Upgrade Data")]
     public List<UpgradeChoice> possibleUpgrades;
-
-    [Header("Upgrade Limits")]
     public int maxUpgrades = 2;
     private int currentUpgrades = 0;
 
-    [Header("Local UI References")]
-    public GameObject localCanvas; // The Canvas sitting on this prefab
-    public Button[] choiceButtons = new Button[3];
-    public TextMeshProUGUI[] choiceTexts = new TextMeshProUGUI[3];
-
     private TowerTargetSearch towerLogic;
-    private List<UpgradeChoice> currentChoices; // Remembers the 3 rolled choices
-    private bool isMenuOpen = false;
+    private List<UpgradeChoice> currentChoices;
 
     void Awake()
     {
         towerLogic = GetComponent<TowerTargetSearch>();
-        localCanvas.SetActive(false); // Make sure the menu is hidden when the tower spawns
     }
 
-    // 3. DETECT CLICKS ON THE TOWER
     void OnMouseDown()
     {
-        isMenuOpen = !isMenuOpen; // Toggle the menu state
-        localCanvas.SetActive(isMenuOpen);
-
-        if (isMenuOpen)
-        {
-            RefreshLocalUI();
-        }
-    }
-
-    // 4. ROLL AND DISPLAY CHOICES
-    void RefreshLocalUI()
-    {
+        // If max level, maybe play an error sound and do nothing
         if (currentUpgrades >= maxUpgrades)
         {
-            // Tower is max level, hide the buttons or show "MAX LEVEL"
-            foreach (var btn in choiceButtons) btn.gameObject.SetActive(false);
+            Debug.Log("Tower is already Max Level!");
             return;
         }
 
         // Roll 3 random choices if we haven't already
         if (currentChoices == null || currentChoices.Count == 0)
         {
-            // Shuffle the list and grab the first 3
             currentChoices = possibleUpgrades.OrderBy(x => Random.value).Take(3).ToList();
         }
 
-        // Apply the choices to our 3 buttons
-        for (int i = 0; i < 3; i++)
+        // Call the Singleton UI and pass THIS specific script as the target
+        if (UpgradeUIPanel.Instance != null)
         {
-            if (i < currentChoices.Count)
-            {
-                UpgradeChoice choice = currentChoices[i];
-                choiceButtons[i].gameObject.SetActive(true);
-                choiceTexts[i].text = $"{choice.upgradeName}\n{choice.cost}g\n{choice.description}";
-
-                // Wire up the button click event
-                choiceButtons[i].onClick.RemoveAllListeners();
-                choiceButtons[i].onClick.AddListener(() => BuyUpgrade(choice));
-            }
-            else
-            {
-                choiceButtons[i].gameObject.SetActive(false); // Hide button if we ran out of choices
-            }
+            UpgradeUIPanel.Instance.ShowPanel(this, currentChoices);
         }
     }
 
-    // 5. BUY AND APPLY THE UPGRADE
     public void BuyUpgrade(UpgradeChoice chosenUpgrade)
     {
         if (EconomyManager.TrySpendGold(chosenUpgrade.cost))
         {
-            // Apply stats directly to your tower data
-            towerLogic.towerData.attackDamage += chosenUpgrade.bonusDamage;
-            towerLogic.towerData.attackRange += chosenUpgrade.bonusRange;
-
-            // Note: Make sure your TowerData actually has an attacksPerSecond or similar variable!
-            towerLogic.towerData.attackCooldown -= chosenUpgrade.bonusFireRate;
+            // IMPORTANT: Apply stats to the LIVE DATA instance, not the base ScriptableObject!
+            // Assuming you added the LevelUp method we discussed previously.
+            towerLogic.towerDataInst.LevelUp(chosenUpgrade);
 
             currentUpgrades++;
             currentChoices.Clear(); // Wipe the choices so it rolls new ones next time
 
             Debug.Log($"Upgraded {chosenUpgrade.upgradeName}!");
 
-            // Close the menu after buying
-            isMenuOpen = false;
-            localCanvas.SetActive(false);
+            // Close the global UI after a successful purchase
+            if (UpgradeUIPanel.Instance != null)
+            {
+                UpgradeUIPanel.Instance.HidePanel();
+            }
         }
         else
         {
             Debug.LogWarning("Not enough gold!");
+            // You could also trigger a red flash on the UI here!
         }
     }
 }

@@ -216,6 +216,8 @@ GameObject:
   - component: {fileID: 1064555322493818046}
   - component: {fileID: 7430336826052301994}
   - component: {fileID: 3207904515791920043}
+  - component: {fileID: -5377746868660281590}
+  - component: {fileID: -2847361539092246584}
   m_Layer: 7
   m_Name: EconTower
   m_TagString: Untagged
@@ -341,3 +343,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldPerInterval: 10
+--- !u!114 &-5377746868660281590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8577253915775799298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a4dc2c17ff1a8f49b76941a4281e042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towerTargetSearch: {fileID: 0}
+--- !u!114 &-2847361539092246584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8577253915775799298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe3e373498113f47873c72bab37a646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleUpgrades:
+  - upgradeName: 
+    description: 
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: 
+    description: 
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: 
+    description: 
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  maxUpgrades: 2

@@ -8,7 +8,7 @@ public class TowerTargetSearch : MonoBehaviour
     public LayerMask enemyLayer;
 
     [SerializeField] public TowerData towerData;
-    private TowerDataInstance towerDataInst = new TowerDataInstance();
+    public TowerDataInstance towerDataInst = new TowerDataInstance();
 
     private ITowerAttackStrategy attackStrategy;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -57,6 +57,6 @@ public class TowerTargetSearch : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, towerData.attackRange);
+        Gizmos.DrawWireSphere(transform.position, towerDataInst.attackRange);
     }
 }

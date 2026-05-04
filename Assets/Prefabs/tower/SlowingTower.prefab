@@ -217,6 +217,8 @@ GameObject:
   - component: {fileID: 7430336826052301994}
   - component: {fileID: 6078495734288422967}
   - component: {fileID: -1877278088811840513}
+  - component: {fileID: 8091404033517183103}
+  - component: {fileID: 9013634272894865821}
   m_Layer: 7
   m_Name: SlowingTower
   m_TagString: Untagged
@@ -344,7 +346,16 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  towerData: {fileID: 11400000, guid: 55bc3220a92f3824b99f130d7ccea398, type: 2}
+  towerData: {fileID: 11400000, guid: cf9825bda65bf5f4a8b9740bf4a19282, type: 2}
+  towerDataInst:
+    baseData: {fileID: 0}
+    towerName: 
+    currentLevel: 0
+    maxHealth: 0
+    currentHealth: 0
+    attackDamage: 0
+    attackRange: 0
+    attackCooldown: 0
 --- !u!114 &-1877278088811840513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,3 +374,30 @@ MonoBehaviour:
   firePoint: {fileID: 1302898724143189622}
   slowStatusPrefab: {fileID: 5260096696107491895, guid: a1bf16b1e839d9a4f96b43df2b851d62, type: 3}
   attackSound: {fileID: 8300000, guid: cbf534cb74d3c214888216a6d34f7dee, type: 3}
+--- !u!114 &8091404033517183103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8577253915775799298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a4dc2c17ff1a8f49b76941a4281e042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towerTargetSearch: {fileID: 0}
+--- !u!114 &9013634272894865821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8577253915775799298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe3e373498113f47873c72bab37a646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleUpgrades: []
+  maxUpgrades: 2
