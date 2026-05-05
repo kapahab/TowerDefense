@@ -148,7 +148,6 @@ GameObject:
   - component: {fileID: 5147604877559913130}
   - component: {fileID: 6015205570698212770}
   - component: {fileID: 6009010087410248242}
-  - component: {fileID: 4385386361785102849}
   m_Layer: 5
   m_Name: AreaDamageTower
   m_TagString: Untagged
@@ -169,6 +168,7 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1554415101231725918}
+  - {fileID: 847737007551996992}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -258,18 +258,117 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4385386361785102849
-MonoBehaviour:
+--- !u!1001 &3029356564038161540
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6014435188260785771}
+    m_Modifications:
+    - target: {fileID: 1154407255107905102, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_text
+      value: 20 Gold
+      objectReference: {fileID: 0}
+    - target: {fileID: 2076103051783751864, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: towerPrefab
+      value: 
+      objectReference: {fileID: 8577253915775799298, guid: 60f4645106d6ca7489a2018c08dac596, type: 3}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4658474131724147426, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_text
+      value: AoE Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 7081531261367902010, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_Name
+      value: BoonBanner
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 176df552c8c030e4685b94721812283e, type: 3}
+--- !u!224 &847737007551996992 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2434666119633105092, guid: 176df552c8c030e4685b94721812283e, type: 3}
+  m_PrefabInstance: {fileID: 3029356564038161540}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2568591831180077848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf65388168f5f6e4785fbcf3d04335b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  towerPrefab: {fileID: 8577253915775799298, guid: 60f4645106d6ca7489a2018c08dac596, type: 3}
-  cell: {fileID: 0}
-  towerCost: 20

@@ -51,6 +51,8 @@ public class Cell : MonoBehaviour
     {
         if (occupied)
             return;
+        GetRandomTowerButtons buttons = FindFirstObjectByType<GetRandomTowerButtons>();
+        if (buttons != null) return;
         selectionInstance = Instantiate(selectionScreen, transform.position + Vector3.up * 0.5f, Quaternion.identity);
         selectionInstance.GetComponent<GetRandomTowerButtons>().cell = this;
     }

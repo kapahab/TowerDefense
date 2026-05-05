@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 8787296929232798188}
   - component: {fileID: 1752139709597780519}
   - component: {fileID: 3779561921286063817}
-  - component: {fileID: 7402253927282645514}
   - component: {fileID: 5995423379281648504}
+  - component: {fileID: 1770590635804353577}
   m_Layer: 5
   m_Name: TowerSelectionCanvas
   m_TagString: Untagged
@@ -103,32 +103,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &7402253927282645514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2329546336100420120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: -848.2
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!114 &5995423379281648504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,3 +121,30 @@ MonoBehaviour:
   - {fileID: 2568591831180077848, guid: 188f812c8d5f09e4f921daebadfd620a, type: 3}
   - {fileID: 6323638938311700626, guid: 3691bb9e08fe98f4691b702991e57ace, type: 3}
   - {fileID: 2568591831180077848, guid: 4850f28d65cd5ab4abfacd71855713ef, type: 3}
+  cell: {fileID: 0}
+--- !u!114 &1770590635804353577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2329546336100420120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: -411.41
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0

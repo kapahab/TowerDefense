@@ -17,7 +17,7 @@ public class GetRandomTowerButtons : MonoBehaviour
         {
             GameObject randomTower = towerButtons[Random.Range(0, towerButtons.Count)];
             GameObject instTower = Instantiate(randomTower,transform);
-            instTower.GetComponent<TowerSelectionButton>().cell = cell;
+            instTower.GetComponentInChildren<TowerSelectionButton>().cell = cell;
             towerButtons.Remove(randomTower);
         }
     }
