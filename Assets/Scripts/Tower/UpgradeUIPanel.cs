@@ -33,39 +33,76 @@ public class UpgradeUIPanel : MonoBehaviour
         activeTower = callingTower;
         panelContainer.SetActive(true);
 
+        // Enter Slow-Mo!
+        Time.timeScale = 0.15f; 
+        Time.fixedDeltaTime = 0.02f * Time.timeScale; // Keep physics smooth
+
         for (int i = 0; i < 3; i++)
         {
             if (i < choices.Count)
             {
                 UpgradeChoice choice = choices[i];
                 choiceButtons[i].gameObject.SetActive(true);
-                choiceTexts[i].text = $"{choice.upgradeName}\n{choice.cost}g\n{choice.description}";
+                
+                string finalDesc = GenerateStatDescription(choice);
+                choiceTexts[i].text = $"{choice.upgradeName}\n{choice.cost}g\n{finalDesc}";
 
-                // Clear old listeners so we don't buy an upgrade from a previous tower!
                 choiceButtons[i].onClick.RemoveAllListeners();
-
-                // Tell the button to trigger our local method, passing the specific choice
                 choiceButtons[i].onClick.AddListener(() => OnUpgradeButtonClicked(choice));
             }
             else
             {
-                choiceButtons[i].gameObject.SetActive(false); // Hide unused panels
+                choiceButtons[i].gameObject.SetActive(false);
             }
         }
     }
 
+    private string GenerateStatDescription(UpgradeChoice choice)
+    {
+        if (choice.isSpecialization) return choice.description;
+
+        string desc = "";
+        string pct = choice.isPercentageBased ? "%" : "";
+
+        if (choice.bonusDamage > 0) desc += $"+{choice.bonusDamage}{pct} Damage\n";
+        if (choice.bonusRange > 0) desc += $"+{choice.bonusRange}{pct} Range\n";
+        if (choice.bonusFireRate > 0) desc += $"+{choice.bonusFireRate}{pct} Fire Rate\n";
+        
+        if (choice.bonusAoERadius > 0) desc += $"+{choice.bonusAoERadius}{pct} AoE Radius\n";
+        if (choice.bonusSlowAmount > 0) desc += $"+{choice.bonusSlowAmount}{pct} Slow\n";
+        if (choice.bonusDoTDamage > 0) desc += $"+{choice.bonusDoTDamage}{pct} Poison Dmg\n";
+
+        if (choice.bonusGold > 0) desc += $"+{choice.bonusGold}{pct} Gold Income\n";
+        if (choice.bonusSpeed > 0) desc += $"+{choice.bonusSpeed}{pct} Proc Speed\n";
+
+        if (string.IsNullOrEmpty(desc)) return choice.description; // Fallback
+        
+        return desc.TrimEnd('\n');
+    }
+
     private void OnUpgradeButtonClicked(UpgradeChoice choice)
     {
-        // Tell the specific tower that opened the menu to buy this exact upgrade
         if (activeTower != null)
         {
             activeTower.BuyUpgrade(choice);
         }
     }
 
+    public void HideIfActive(LocalTowerUpgrades tower)
+    {
+        if (activeTower == tower)
+        {
+            HidePanel();
+        }
+    }
+
     public void HidePanel()
     {
         panelContainer.SetActive(false);
-        activeTower = null; // Clear the reference
+        activeTower = null;
+
+        // Restore Normal Time
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
     }
 }

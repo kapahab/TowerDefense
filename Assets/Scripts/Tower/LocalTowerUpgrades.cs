@@ -195,4 +195,13 @@ public class LocalTowerUpgrades : MonoBehaviour
             Debug.LogWarning("Not enough gold!");
         }
     }
+
+    private void OnDestroy()
+    {
+        // If this tower dies (or gets destroyed during specialization) while the UI is open, close it!
+        if (UpgradeUIPanel.Instance != null)
+        {
+            UpgradeUIPanel.Instance.HideIfActive(this);
+        }
+    }
 }
