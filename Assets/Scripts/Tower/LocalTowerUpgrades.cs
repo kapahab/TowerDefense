@@ -2,7 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
-using System.Linq; // Required for shuffling the list
+using System.Linq;
+
+public enum UpgradeTier
+{
+    Tier1, // 75%
+    Tier2, // 20%
+    Tier3  // 5%
+}
 
 [System.Serializable]
 public class UpgradeChoice
@@ -11,52 +18,139 @@ public class UpgradeChoice
     public string description = "+10 Dmg";
     public int cost = 50;
 
+    [Header("Specialization (Tier 0)")]
+    public bool isSpecialization = false;
+    public GameObject specializedTowerPrefab;
+
+    [Header("Stat Upgrades (Tier 1-3)")]
+    public UpgradeTier tier = UpgradeTier.Tier1;
+    public bool isPercentageBased = false;
+
     [Header("Combat Stats")]
     public float bonusDamage;
     public float bonusRange;
     public float bonusFireRate;
 
+    [Header("Special Stats")]
+    public float bonusAoERadius;
+    public float bonusSlowAmount;
+    public float bonusDoTDamage;
+
     [Header("Economy Stats")]
-    public int bonusGold;      // How much extra gold it makes
-    public float bonusSpeed;   // How much faster it prints money
+    public int bonusGold;
+    public float bonusSpeed;
 }
 
-// 2. THE MAIN SCRIPT
-[RequireComponent(typeof(Collider))] // Ensures you have a collider to click on
+[RequireComponent(typeof(Collider))]
 public class LocalTowerUpgrades : MonoBehaviour
 {
-    [Header("Upgrade Data")]
+    [Header("Specialization (Tier 0)")]
+    public bool requiresSpecialization = false;
+    public List<UpgradeChoice> specializationPaths;
+    private bool isSpecialized = false;
+
+    [Header("Stat Upgrades (Tier 1-3)")]
     public List<UpgradeChoice> possibleUpgrades;
     public int maxUpgrades = 2;
     private int currentUpgrades = 0;
 
-    private TowerTargetSearch towerLogic;
+    private ITowerDataContainer dataContainer;
     private List<UpgradeChoice> currentChoices;
 
     void Awake()
     {
-        towerLogic = GetComponent<TowerTargetSearch>();
+        dataContainer = GetComponent<ITowerDataContainer>();
     }
 
     void OnMouseDown()
     {
-        // If max level, maybe play an error sound and do nothing
+        // 1. Prevent clicking on the tower if the mouse is currently hovering over a UI banner!
+        if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        // Tier 0: Check if it needs to specialize first
+        if (requiresSpecialization && !isSpecialized)
+        {
+            if (currentChoices == null || currentChoices.Count == 0)
+            {
+                currentChoices = specializationPaths.OrderBy(x => Random.value).Take(3).ToList();
+            }
+
+            // Prevent opening the UI if they can't even afford the cheapest choice
+            if (currentChoices.Count > 0 && EconomyManager.currentGold < currentChoices.Min(c => c.cost))
+            {
+                Debug.LogWarning("Not enough gold to open Specialization UI!");
+                return;
+            }
+
+            if (UpgradeUIPanel.Instance != null)
+            {
+                UpgradeUIPanel.Instance.ShowPanel(this, currentChoices);
+            }
+            return;
+        }
+
+        // Tiers 1-3: Stat Upgrades
         if (currentUpgrades >= maxUpgrades)
         {
             Debug.Log("Tower is already Max Level!");
             return;
         }
 
-        // Roll 3 random choices if we haven't already
         if (currentChoices == null || currentChoices.Count == 0)
         {
-            currentChoices = possibleUpgrades.OrderBy(x => Random.value).Take(3).ToList();
+            RollWeightedUpgrades();
         }
 
-        // Call the Singleton UI and pass THIS specific script as the target
+        // Prevent opening the UI if they can't even afford the cheapest choice
+        if (currentChoices.Count > 0 && EconomyManager.currentGold < currentChoices.Min(c => c.cost))
+        {
+            Debug.LogWarning("Not enough gold to open Upgrade UI!");
+            return;
+        }
+
         if (UpgradeUIPanel.Instance != null)
         {
             UpgradeUIPanel.Instance.ShowPanel(this, currentChoices);
+        }
+    }
+
+    private void RollWeightedUpgrades()
+    {
+        currentChoices = new List<UpgradeChoice>();
+        List<UpgradeChoice> tier1 = possibleUpgrades.Where(u => u.tier == UpgradeTier.Tier1).ToList();
+        List<UpgradeChoice> tier2 = possibleUpgrades.Where(u => u.tier == UpgradeTier.Tier2).ToList();
+        List<UpgradeChoice> tier3 = possibleUpgrades.Where(u => u.tier == UpgradeTier.Tier3).ToList();
+
+        for (int i = 0; i < 3; i++)
+        {
+            float roll = Random.Range(0f, 100f);
+            List<UpgradeChoice> poolToUse = null;
+
+            if (roll <= 75f && tier1.Count > 0)
+            {
+                poolToUse = tier1;
+            }
+            else if (roll <= 95f && tier2.Count > 0)
+            {
+                poolToUse = tier2;
+            }
+            else if (tier3.Count > 0)
+            {
+                poolToUse = tier3;
+            }
+
+            // Fallback if the selected pool is empty
+            if (poolToUse == null || poolToUse.Count == 0)
+            {
+                poolToUse = possibleUpgrades; // Just grab from anywhere
+            }
+
+            if (poolToUse.Count > 0)
+            {
+                UpgradeChoice selected = poolToUse[Random.Range(0, poolToUse.Count)];
+                currentChoices.Add(selected);
+            }
         }
     }
 
@@ -64,16 +158,33 @@ public class LocalTowerUpgrades : MonoBehaviour
     {
         if (EconomyManager.TrySpendGold(chosenUpgrade.cost))
         {
-            // IMPORTANT: Apply stats to the LIVE DATA instance, not the base ScriptableObject!
-            // Assuming you added the LevelUp method we discussed previously.
-            towerLogic.towerDataInst.LevelUp(chosenUpgrade);
+            if (chosenUpgrade.isSpecialization)
+            {
+                // Instantiate the specialized tower exactly where this one is
+                if (chosenUpgrade.specializedTowerPrefab != null)
+                {
+                    GameObject newTower = Instantiate(chosenUpgrade.specializedTowerPrefab, transform.position, transform.rotation, transform.parent);
+                    
+                    // Register the new tower if needed by other systems (like Grid)
+                    // The old tower gets destroyed
+                    Destroy(gameObject);
+                }
+            }
+            else
+            {
+                if (dataContainer != null)
+                {
+                    dataContainer.GetTowerDataInstance().LevelUp(chosenUpgrade);
+                    currentUpgrades++;
+                    currentChoices.Clear();
+                    Debug.Log($"Upgraded {chosenUpgrade.upgradeName}!");
+                }
+                else
+                {
+                    Debug.LogError("No ITowerDataContainer found on this tower! Make sure the tower has a script that implements it.");
+                }
+            }
 
-            currentUpgrades++;
-            currentChoices.Clear(); // Wipe the choices so it rolls new ones next time
-
-            Debug.Log($"Upgraded {chosenUpgrade.upgradeName}!");
-
-            // Close the global UI after a successful purchase
             if (UpgradeUIPanel.Instance != null)
             {
                 UpgradeUIPanel.Instance.HidePanel();
@@ -82,7 +193,6 @@ public class LocalTowerUpgrades : MonoBehaviour
         else
         {
             Debug.LogWarning("Not enough gold!");
-            // You could also trigger a red flash on the UI here!
         }
     }
 }

@@ -49,6 +49,9 @@ public class Cell : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            return;
+
         if (occupied)
             return;
         GetRandomTowerButtons buttons = FindFirstObjectByType<GetRandomTowerButtons>();

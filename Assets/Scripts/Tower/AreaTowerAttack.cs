@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class AreaTowerAttack : MonoBehaviour, ITowerAttackStrategy
 {
+    [Header("AoE Stats")]
+    public float baseAoeRadius = 3f;
+    public LayerMask enemyLayer; // Needed to find targets on explosion
+
     [Header("Visuals")]
     [Tooltip("The boulder or bomb that flies through the air")]
     public GameObject arcProjectilePrefab;
@@ -13,26 +17,25 @@ public class AreaTowerAttack : MonoBehaviour, ITowerAttackStrategy
     [Header("Audio")]
     public AudioClip attackSound;
 
-    private Collider[] targetsToHit;
     private Vector3 impactPoint;
+    private LayerMask cachedEnemyLayer;
 
     public void ChooseTarget(Collider[] potentialTargets)
     {
-        targetsToHit = potentialTargets;
-
         // Aim exactly at the feet of the first enemy in the cluster
         if (potentialTargets.Length > 0 && potentialTargets[0] != null)
         {
             impactPoint = potentialTargets[0].transform.position;
             // Lock the Y axis to the floor so the math is perfect
             impactPoint.y = 0f;
+            
+            // Auto-detect the enemy layer in case it wasn't set in the Inspector
+            cachedEnemyLayer = 1 << potentialTargets[0].gameObject.layer;
         }
     }
 
     public void ExecuteAttack(TowerDataInstance data)
     {
-        if (targetsToHit == null || targetsToHit.Length == 0) return;
-
         float flightTime = 0f;
 
         // 1. Launch the Mortar Visual
@@ -51,10 +54,10 @@ public class AreaTowerAttack : MonoBehaviour, ITowerAttackStrategy
         PlayAttackSound();
 
         // 2. Start the delayed explosion
-        StartCoroutine(ApplyAoEAfterDelay(flightTime, data.attackDamage));
+        StartCoroutine(ApplyAoEAfterDelay(flightTime, data));
     }
 
-    private IEnumerator ApplyAoEAfterDelay(float delayTime, float damage)
+    private IEnumerator ApplyAoEAfterDelay(float delayTime, TowerDataInstance data)
     {
         // Wait while the boulder is mid-air
         yield return new WaitForSeconds(delayTime);
@@ -72,21 +75,24 @@ public class AreaTowerAttack : MonoBehaviour, ITowerAttackStrategy
             Destroy(boom, 3f);
         }
 
-        // 2. Deal Damage to everyone in the cached array
-        foreach (Collider enemy in targetsToHit)
+        // 2. Deal Damage to everyone in the true AoE radius
+        float totalAoeRadius = baseAoeRadius + data.bonusAoERadius;
+        LayerMask layerToUse = enemyLayer.value != 0 ? enemyLayer : cachedEnemyLayer;
+        Collider[] hits = Physics.OverlapSphere(impactPoint, totalAoeRadius, layerToUse);
+
+        foreach (Collider enemy in hits)
         {
-            // CRITICAL CHECK: The enemy might have been killed by another tower while our bomb was mid-air!
             if (enemy != null)
             {
                 IDamageable health = enemy.GetComponent<IDamageable>();
                 if (health != null)
                 {
-                    health.TakeDamage(damage);
+                    health.TakeDamage(data.attackDamage);
                 }
             }
         }
 
-        Debug.Log($"AoE Tower exploded, hitting up to {targetsToHit.Length} enemies!");
+        Debug.Log($"AoE Tower exploded with radius {totalAoeRadius}, hitting {hits.Length} enemies!");
     }
 
     public void PlayAttackSound()
@@ -95,5 +101,11 @@ public class AreaTowerAttack : MonoBehaviour, ITowerAttackStrategy
         {
             SoundManager.Instance.PlaySFX(attackSound, 1f, true);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(impactPoint, baseAoeRadius);
     }
 }

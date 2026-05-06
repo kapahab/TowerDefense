@@ -55,13 +55,13 @@ public class DoTTowerAttack : MonoBehaviour, ITowerAttackStrategy
                     float flightTime = distance / visualScript.speed;
 
                     PlayAttackSound();
-                    StartCoroutine(ApplyDoTAfterDelay(flightTime, data.attackDamage));
+                    StartCoroutine(ApplyDoTAfterDelay(flightTime, data));
                 }
             }
             else
             {
                 PlayAttackSound();
-                StartCoroutine(ApplyDoTAfterDelay(0f, data.attackDamage));
+                StartCoroutine(ApplyDoTAfterDelay(0f, data));
             }
         }
         else
@@ -70,15 +70,15 @@ public class DoTTowerAttack : MonoBehaviour, ITowerAttackStrategy
         }
     }
 
-    private IEnumerator ApplyDoTAfterDelay(float delayTime, float initialImpactDamage)
+    private IEnumerator ApplyDoTAfterDelay(float delayTime, TowerDataInstance data)
     {
         yield return new WaitForSeconds(delayTime);
 
         if (targetTransform != null && targetDamageable != null)
         {
-            if (initialImpactDamage > 0)
+            if (data.attackDamage > 0)
             {
-                targetDamageable.TakeDamage(initialImpactDamage);
+                targetDamageable.TakeDamage(data.attackDamage);
             }
 
             if (dotStatusPrefab != null)
@@ -110,7 +110,8 @@ public class DoTTowerAttack : MonoBehaviour, ITowerAttackStrategy
                 Destroy(statusAura, dotDuration);
             }
 
-            float damagePerTick = totalDotDamage / damageTicks;
+            float finalTotalDotDamage = totalDotDamage + data.bonusDoTDamage;
+            float damagePerTick = finalTotalDotDamage / damageTicks;
             float timeBetweenTicks = dotDuration / damageTicks;
 
             for (int i = 0; i < damageTicks; i++)

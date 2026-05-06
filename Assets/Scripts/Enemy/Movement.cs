@@ -35,6 +35,7 @@ public class Movement : MonoBehaviour, ISlowable
 
     void Start()
     {
+        baseSpeed *= 0.5f; // Globally halve the enemy speed as requested
         currentSpeed = baseSpeed;
 
         personalLaneOffset = new Vector3(

@@ -219,6 +219,8 @@ GameObject:
   - component: {fileID: -5377746868660281590}
   - component: {fileID: -2847361539092246584}
   - component: {fileID: -1505063322804517408}
+  - component: {fileID: 5453787419323989140}
+  - component: {fileID: 8123027592981089803}
   m_Layer: 7
   m_Name: EconTower
   m_TagString: Untagged
@@ -370,31 +372,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe3e373498113f47873c72bab37a646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  requiresSpecialization: 0
+  specializationPaths: []
   possibleUpgrades:
-  - upgradeName: 
-    description: 
+  - upgradeName: Gold Bonus Upgrade I
+    description: Gold Increase
     cost: 0
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 0
+    isPercentageBased: 0
     bonusDamage: 0
     bonusRange: 0
     bonusFireRate: 0
-    bonusGold: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
+    bonusGold: 10
     bonusSpeed: 0
-  - upgradeName: 
-    description: 
+  - upgradeName: Income Rate Upgrade I
+    description: Increase Income Rate
     cost: 0
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 0
+    isPercentageBased: 0
     bonusDamage: 0
     bonusRange: 0
     bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
-    bonusSpeed: 0
-  - upgradeName: 
-    description: 
+    bonusSpeed: 2
+  - upgradeName: Gold Bonus Upgrade II
+    description: Gold Increase
     cost: 0
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 0
+    isPercentageBased: 0
     bonusDamage: 0
     bonusRange: 0
     bonusFireRate: 0
-    bonusGold: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
+    bonusGold: 20
     bonusSpeed: 0
+  - upgradeName: Income Rate Upgrade II
+    description: Increase Income Rate
+    cost: 0
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 0
+    isPercentageBased: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
+    bonusGold: 0
+    bonusSpeed: 2
   maxUpgrades: 2
 --- !u!120 &-1505063322804517408
 LineRenderer:
@@ -503,3 +543,40 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!135 &5453787419323989140
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8577253915775799298}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0.895, z: 0}
+--- !u!114 &8123027592981089803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8577253915775799298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c21f55dae23dd44885cce376a277b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scavengeRadius: 1.7
+  bonusGoldPerKill: 10
+  coinEffect: {fileID: 0}
+  coinSound: {fileID: 0}

@@ -48,19 +48,19 @@ public class SlowingTowerAttack : MonoBehaviour, ITowerAttackStrategy
 
                     PlayAttackSound();
                     // Start the timer to delay the actual damage and slow
-                    StartCoroutine(ApplyEffectAfterDelay(data.attackDamage, flightTime));
+                    StartCoroutine(ApplyEffectAfterDelay(data, flightTime));
                 }
             }
             else
             {
                 PlayAttackSound();
                 // Failsafe: If no visuals are assigned in the editor, just apply the effect instantly
-                StartCoroutine(ApplyEffectAfterDelay(data.attackDamage, 0f));
+                StartCoroutine(ApplyEffectAfterDelay(data, 0f));
             }
         }
     }
 
-    private IEnumerator ApplyEffectAfterDelay(float damage, float delayTime)
+    private IEnumerator ApplyEffectAfterDelay(TowerDataInstance data, float delayTime)
     {
         // Wait exactly as long as it takes the dummy projectile to fly
         yield return new WaitForSeconds(delayTime);
@@ -71,13 +71,14 @@ public class SlowingTowerAttack : MonoBehaviour, ITowerAttackStrategy
             // 1. Apply Damage
             if (targetDamageable != null)
             {
-                targetDamageable.TakeDamage(damage);
+                targetDamageable.TakeDamage(data.attackDamage);
             }
 
             // 2. Apply Slow and Status Visual
             if (targetSlowable != null)
             {
-                targetSlowable.Slow(slowAmount, slowDuration);
+                float totalSlow = slowAmount + data.bonusSlowAmount;
+                targetSlowable.Slow(totalSlow, slowDuration);
 
                 // 3. Spawn the Ice Aura!
                 if (slowStatusPrefab != null)

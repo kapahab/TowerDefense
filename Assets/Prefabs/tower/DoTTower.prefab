@@ -412,7 +412,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe3e373498113f47873c72bab37a646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleUpgrades: []
+  possibleUpgrades:
+  - upgradeName: Range Upgrade I
+    description: Range Increase
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 1
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Range Upgrade III
+    description: Range Increase
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 2.5
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Range Upgrade II
+    description: Range Increase
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 1.75
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Damage Upgrade I
+    description: Damage Increase
+    cost: 0
+    bonusDamage: 5
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Damage Upgrade II
+    description: Damage Increase
+    cost: 0
+    bonusDamage: 10
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Damage Upgrade III
+    description: Damage Increase
+    cost: 0
+    bonusDamage: 15
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Fire Rate Upgrade II
+    description: Fire Rate Increase
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 2
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Fire Rate Upgrade III
+    description: Fire Rate Increase
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 3
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Fire Rate Upgrade I
+    description: Fire Rate Increase
+    cost: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 1
+    bonusGold: 0
+    bonusSpeed: 0
   maxUpgrades: 2
 --- !u!120 &-4685853518600495673
 LineRenderer:
