@@ -392,7 +392,67 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiresSpecialization: 1
-  specializationPaths: []
+  specializationPaths:
+  - upgradeName: Slow Tower
+    description: 
+    cost: 50
+    isSpecialization: 1
+    specializedTowerPrefab: {fileID: 8577253915775799298, guid: a9b83dad637972d46935a4a16e09f98a, type: 3}
+    tier: 0
+    isPercentageBased: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Slow Tower
+    description: 
+    cost: 50
+    isSpecialization: 1
+    specializedTowerPrefab: {fileID: 8577253915775799298, guid: a9b83dad637972d46935a4a16e09f98a, type: 3}
+    tier: 0
+    isPercentageBased: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Poison Tower
+    description: 
+    cost: 50
+    isSpecialization: 1
+    specializedTowerPrefab: {fileID: 8577253915775799298, guid: fb7c9faf472daf4438829ffb25958a45, type: 3}
+    tier: 0
+    isPercentageBased: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
+    bonusGold: 0
+    bonusSpeed: 0
+  - upgradeName: Boulder Tower
+    description: 
+    cost: 50
+    isSpecialization: 1
+    specializedTowerPrefab: {fileID: 8577253915775799298, guid: 60f4645106d6ca7489a2018c08dac596, type: 3}
+    tier: 0
+    isPercentageBased: 0
+    bonusDamage: 0
+    bonusRange: 0
+    bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
+    bonusGold: 0
+    bonusSpeed: 0
   possibleUpgrades:
   - upgradeName: Range Upgrade I
     description: Range Increase

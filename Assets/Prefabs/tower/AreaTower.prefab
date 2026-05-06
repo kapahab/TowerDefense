@@ -364,6 +364,9 @@ MonoBehaviour:
     attackCooldown: 0
     goldGenerated: 0
     generationInterval: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
 --- !u!114 &7485800443593719181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,6 +379,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aea7b3b7cda2234aa10b14b893e4b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseAoeRadius: 3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
   arcProjectilePrefab: {fileID: 8270498642340732200, guid: 36c6ac4211c2a21418fac22c94bf2e62, type: 3}
   explosionCraterPrefab: {fileID: 0}
   firePoint: {fileID: 1302898724143189622}
@@ -405,77 +412,142 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe3e373498113f47873c72bab37a646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  requiresSpecialization: 0
+  specializationPaths: []
   possibleUpgrades:
   - upgradeName: Range Upgrade I
     description: Range Increase
-    cost: 0
+    cost: 100
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 0
+    isPercentageBased: 1
     bonusDamage: 0
-    bonusRange: 1
+    bonusRange: 25
     bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   - upgradeName: Range Upgrade III
     description: Range Increase
-    cost: 0
+    cost: 175
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 2
+    isPercentageBased: 1
     bonusDamage: 0
-    bonusRange: 2.5
+    bonusRange: 75
     bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   - upgradeName: Range Upgrade II
     description: Range Increase
-    cost: 0
+    cost: 100
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 1
+    isPercentageBased: 1
     bonusDamage: 0
-    bonusRange: 1.75
+    bonusRange: 40
     bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   - upgradeName: Damage Upgrade I
     description: Damage Increase
-    cost: 0
-    bonusDamage: 5
+    cost: 100
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 0
+    isPercentageBased: 1
+    bonusDamage: 20
     bonusRange: 0
     bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   - upgradeName: Damage Upgrade II
     description: Damage Increase
-    cost: 0
-    bonusDamage: 10
+    cost: 100
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 1
+    isPercentageBased: 1
+    bonusDamage: 40
     bonusRange: 0
     bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   - upgradeName: Damage Upgrade III
     description: Damage Increase
-    cost: 0
-    bonusDamage: 15
+    cost: 175
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 2
+    isPercentageBased: 1
+    bonusDamage: 60
     bonusRange: 0
     bonusFireRate: 0
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   - upgradeName: Fire Rate Upgrade II
     description: Fire Rate Increase
-    cost: 0
+    cost: 100
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 1
+    isPercentageBased: 1
     bonusDamage: 0
     bonusRange: 0
-    bonusFireRate: 2
+    bonusFireRate: 35
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   - upgradeName: Fire Rate Upgrade III
     description: Fire Rate Increase
     cost: 0
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 2
+    isPercentageBased: 1
     bonusDamage: 0
     bonusRange: 0
-    bonusFireRate: 3
+    bonusFireRate: 50
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   - upgradeName: Fire Rate Upgrade I
     description: Fire Rate Increase
-    cost: 0
+    cost: 100
+    isSpecialization: 0
+    specializedTowerPrefab: {fileID: 0}
+    tier: 0
+    isPercentageBased: 1
     bonusDamage: 0
     bonusRange: 0
-    bonusFireRate: 1
+    bonusFireRate: 20
+    bonusAoERadius: 0
+    bonusSlowAmount: 0
+    bonusDoTDamage: 0
     bonusGold: 0
     bonusSpeed: 0
   maxUpgrades: 2
