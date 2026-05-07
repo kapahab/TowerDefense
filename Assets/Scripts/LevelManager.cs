@@ -17,7 +17,6 @@ public class WaveSegment
 {
     public GameObject enemyPrefab;
     public int count;
-    [Tooltip("Time to wait between spawning each enemy in this group")]
     public float spawnDelay = 1f;
 
     [Header("Routing")]
@@ -34,7 +33,6 @@ public class Wave
 
 public class LevelManager : MonoBehaviour
 {
-    // NEW: Singleton Instance so spawned babies can talk to the manager!
     public static LevelManager Instance { get; private set; }
 
     [Header("Map Setup")]
@@ -47,18 +45,24 @@ public class LevelManager : MonoBehaviour
     private List<GameObject> activeEnemies = new List<GameObject>();
 
     private bool allWavesSpawned = false;
+    private bool skipWaitRequested = false; // NEW: Flag to skip the timer
+    private bool isFastForward = false;     // NEW: Tracks our game speed
 
+    // EVENTS
     public static Action OnGameWon;
+    public static Action<int, int> OnWaveStarted; // NEW: Passes (CurrentWave, TotalWaves)
 
     void Awake()
     {
-        // Singleton Setup
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
     void Start()
     {
+        // Always ensure time is normal when a level starts!
+        Time.timeScale = 1f;
+
         if (availableRoutes == null || availableRoutes.Count == 0)
         {
             Debug.LogError("LevelManager has no routes assigned!");
@@ -75,13 +79,13 @@ public class LevelManager : MonoBehaviour
             currentWaveIndex = w;
             Wave currentWave = waves[w];
 
+            // Tell the UI that a new wave has started! (Adding 1 so it reads Wave 1 instead of Wave 0)
+            OnWaveStarted?.Invoke(currentWaveIndex + 1, waves.Count);
+
             foreach (WaveSegment segment in currentWave.segments)
             {
                 int safeRouteIndex = segment.routeIndex;
-                if (safeRouteIndex < 0 || safeRouteIndex >= availableRoutes.Count)
-                {
-                    safeRouteIndex = 0;
-                }
+                if (safeRouteIndex < 0 || safeRouteIndex >= availableRoutes.Count) safeRouteIndex = 0;
 
                 RouteConfig selectedRoute = availableRoutes[safeRouteIndex];
 
@@ -92,33 +96,57 @@ public class LevelManager : MonoBehaviour
                 }
             }
 
+            // NEW: Interruptible Wait Timer between waves!
             if (w < waves.Count - 1)
             {
-                yield return new WaitForSeconds(currentWave.timeBeforeNextWave);
+                float waitTimer = currentWave.timeBeforeNextWave;
+                skipWaitRequested = false; // Reset the flag
+
+                // Loop until the timer runs out, OR the player hits the Skip button
+                while (waitTimer > 0f && !skipWaitRequested)
+                {
+                    waitTimer -= Time.deltaTime;
+                    yield return null; // Wait for the next frame
+                }
             }
         }
 
         Debug.Log("All waves have been spawned!");
         allWavesSpawned = true;
 
-        // Trigger the safe check instead of doing it instantly
         StartCoroutine(CheckWinConditionSafely());
     }
+
+    // --- NEW PUBLIC METHODS FOR UI BUTTONS ---
+
+    public void SkipToNextWave()
+    {
+        // This instantly breaks the `while` loop in the Coroutine above!
+        skipWaitRequested = true;
+    }
+
+    public void ToggleFastForward()
+    {
+        isFastForward = !isFastForward;
+
+        // Time.timeScale controls the speed of EVERYTHING in Unity (physics, animations, coroutines)
+        Time.timeScale = isFastForward ? 2f : 1f;
+
+        Debug.Log($"Game Speed set to: {Time.timeScale}x");
+    }
+
+    // -----------------------------------------
 
     void SpawnEnemy(GameObject prefab, RouteConfig route)
     {
         GameObject enemy = Instantiate(prefab, route.spawnPoint.position, route.spawnPoint.rotation);
         enemy.GetComponent<EnemyController>().InitializePath(route.fullPath, route.baseTarget);
-
-        // Use our new public registration method!
         RegisterEnemy(enemy);
     }
 
-    // NEW: A public method that ANY script (like SpawnOnDeath) can call to add an enemy to the tracker
     public void RegisterEnemy(GameObject enemy)
     {
         activeEnemies.Add(enemy);
-
         EnemyHealth healthScript = enemy.GetComponent<EnemyHealth>();
         if (healthScript != null)
         {
@@ -129,29 +157,19 @@ public class LevelManager : MonoBehaviour
     void HandleEnemyDeath(GameObject deadEnemy)
     {
         EnemyHealth healthScript = deadEnemy.GetComponent<EnemyHealth>();
-        if (healthScript != null)
-        {
-            healthScript.OnEnemyDied -= HandleEnemyDeath;
-        }
+        if (healthScript != null) healthScript.OnEnemyDied -= HandleEnemyDeath;
 
-        if (activeEnemies.Contains(deadEnemy))
-        {
-            activeEnemies.Remove(deadEnemy);
-        }
+        if (activeEnemies.Contains(deadEnemy)) activeEnemies.Remove(deadEnemy);
 
-        // Use the safe checker!
         StartCoroutine(CheckWinConditionSafely());
     }
 
-    // NEW: This waits until the absolute end of the Unity frame before checking for a win.
-    // This guarantees that if a parent dies and spawns babies, the babies have time to Register before we count to 0!
     private IEnumerator CheckWinConditionSafely()
     {
         yield return new WaitForEndOfFrame();
-
         if (allWavesSpawned && activeEnemies.Count == 0)
         {
-            Debug.Log("Level Beaten!");
+            Time.timeScale = 1f; // Reset time so the win screen isn't hyper-fast
             OnGameWon?.Invoke();
         }
     }

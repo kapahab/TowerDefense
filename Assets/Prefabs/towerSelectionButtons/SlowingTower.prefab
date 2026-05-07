@@ -354,6 +354,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4145304122674953550, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 285
+      objectReference: {fileID: 0}
+    - target: {fileID: 4145304122674953550, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 324
+      objectReference: {fileID: 0}
+    - target: {fileID: 4145304122674953550, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 4145304122674953550, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 4145304122674953550, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 4145304122674953550, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4658474131724147426, guid: 176df552c8c030e4685b94721812283e, type: 3}
       propertyPath: m_text
       value: Slowing Tower
@@ -362,6 +386,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BoonBanner
       objectReference: {fileID: 0}
+    - target: {fileID: 8460450852680176892, guid: 176df552c8c030e4685b94721812283e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -495151117, guid: db9a8308b8d798f4bb25466c3090a916, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

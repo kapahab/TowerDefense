@@ -26,7 +26,7 @@ public class TowerOnHover : MonoBehaviour
         }
         TowerUIPanel.Instance.ShowTowerInfo(dataInst.GetTowerDataInstance().towerName, dataInst.GetTowerDataInstance().currentLevel,
             dataInst.GetTowerDataInstance().attackDamage,
-            dataInst.GetTowerDataInstance().attackRange, dataInst.GetTowerDataInstance().attackCooldown);
+            dataInst.GetTowerDataInstance().attackRange, dataInst.GetTowerDataInstance().attackCooldown, dataInst.GetTowerDataInstance().towerIcon);
         DrawRing(dataInst.GetTowerDataInstance().attackRange);
         ShowRing();
 

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c893c6b8736d39e4a86db95c92c280b5, type: 3}
   m_Name: AOETowerData
   m_EditorClassIdentifier: 
-  towerName: 
-  towerIcon: {fileID: 0}
+  towerName: AoE Tower
+  towerIcon: {fileID: 1492807703, guid: db9a8308b8d798f4bb25466c3090a916, type: 3}
   towerTier: 1
   health: 100
   attackDamage: 10
@@ -21,4 +21,3 @@ MonoBehaviour:
   attackCooldown: 2
   goldGenerated: 0
   generationInterval: 0
-  upgradePool: []

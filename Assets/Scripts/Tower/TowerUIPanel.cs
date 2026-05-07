@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class TowerUIPanel : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class TowerUIPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI damageText;
     [SerializeField] private TextMeshProUGUI rangeText;
     [SerializeField] private TextMeshProUGUI rateText;
+    [SerializeField] private Image towerIcon;
 
     private void Awake()
     {
@@ -32,7 +34,7 @@ public class TowerUIPanel : MonoBehaviour
         HideTowerInfo();
     }
 
-    public void ShowTowerInfo(string tName, int tLevel, float tDamage, float tRange, float tRate)
+    public void ShowTowerInfo(string tName, int tLevel, float tDamage, float tRange, float tRate, Sprite icon)
     {
         gameObject.SetActive(true);
 
@@ -41,6 +43,7 @@ public class TowerUIPanel : MonoBehaviour
         damageText.text = "Damage: " + tDamage.ToString();
         rangeText.text = "Range: " + tRange.ToString();
         rateText.text = "Fire Rate: " + tRate.ToString() + "/s";
+        towerIcon.sprite = icon; // Set the tower icon (you can customize this as needed)
     }
 
     public void HideTowerInfo()

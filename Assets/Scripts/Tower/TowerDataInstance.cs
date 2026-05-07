@@ -18,6 +18,7 @@ public class TowerDataInstance
     public float attackCooldown;
     public int goldGenerated;
     public float generationInterval;
+    public Sprite towerIcon;
 
     [Header("Mutable Special Stats")]
     public float bonusAoERadius;
@@ -28,6 +29,8 @@ public class TowerDataInstance
     public void InitializeFromBlueprint(TowerData data)
     {
         baseData = data;
+
+        towerIcon = data.towerIcon;
 
         currentLevel = 1;
 

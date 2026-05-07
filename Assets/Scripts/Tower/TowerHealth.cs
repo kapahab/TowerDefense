@@ -10,7 +10,7 @@ public class TowerHealth : MonoBehaviour, IDamageable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        currentHealth = maxHealth;
     }
 
 
@@ -22,7 +22,7 @@ public class TowerHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        if (maxHealth <= 0)
+        if (currentHealth <= 0)
         {
             // Handle tower destruction logic here (e.g., play animation, disable tower, etc.)
             Debug.Log("Tower destroyed!");
@@ -30,6 +30,6 @@ public class TowerHealth : MonoBehaviour, IDamageable
             Destroy(this.gameObject); //?
         }
 
-        maxHealth -= damage;
+        currentHealth -= damage;
     }
 }

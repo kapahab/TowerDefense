@@ -151,3 +151,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trapName: Slowing Trap
   trapDescription: 
+  trapIcon: {fileID: -629178673, guid: a8e7f23460514884ca33c4d358d854d0, type: 3}

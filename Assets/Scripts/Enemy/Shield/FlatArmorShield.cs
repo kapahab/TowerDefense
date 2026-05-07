@@ -47,4 +47,20 @@ public class FlatArmorShield : Shield
         // burst of damage to break the next layer.
         damageHistory.Clear();
     }
+
+    public float GetCurrentDamageProgress()
+    {
+        float currentTime = Time.time;
+
+        // Clean up the history so the UI bar physically drains when time expires!
+        damageHistory.RemoveAll(record => currentTime - record.time > timeFrameInSeconds);
+
+        float recentDamageSum = 0f;
+        foreach (var record in damageHistory)
+        {
+            recentDamageSum += record.amount;
+        }
+
+        return recentDamageSum;
+    }
 }
