@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SoundManager : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class SoundManager : MonoBehaviour
 
     [Header("Music Settings")]
     public AudioSource musicSource;
+
+    [SerializeField] private AudioClip music;
 
     void Awake()
     {
@@ -20,6 +24,11 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Start()
+    {
+        PlayMusic(music);
     }
 
     /// <summary>
