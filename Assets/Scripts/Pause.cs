@@ -23,4 +23,10 @@ public class Pause : MonoBehaviour
     {
         Time.timeScale = 1f; // Resume the game by setting time scale back to 1
     }
+
+    public void QuitToMainMenu()
+    {
+        // Load the main menu scene (make sure to set the correct scene name in the Inspector)
+        UnityEngine.SceneManagement.SceneManager.LoadScene("StartScene");
+    }
 }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class SoundManager : MonoBehaviour
@@ -10,7 +11,7 @@ public class SoundManager : MonoBehaviour
     [Header("Music Settings")]
     public AudioSource musicSource;
 
-    [SerializeField] private AudioClip music;
+    [SerializeField] private AudioClip music1, music2, music3, music4;
 
     void Awake()
     {
@@ -26,10 +27,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void Start()
-    {
-        PlayMusic(music);
-    }
+    
 
     /// <summary>
     /// Plays background music on a loop.
@@ -72,4 +70,38 @@ public class SoundManager : MonoBehaviour
         // Tell Unity to destroy the temporary object the exact millisecond the audio finishes
         Destroy(soundObj, clip.length);
     }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += ChangeMusic;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= ChangeMusic;
+    }
+
+    private void ChangeMusic(Scene arg0, LoadSceneMode arg1)
+    {
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "StartScene":
+                PlayMusic(music1); // You can assign different music clips for different levels if you want!
+                break;
+            case "SampleScene":
+                PlayMusic(music2);
+                break;
+            case "Level2":
+                PlayMusic(music3);
+                break;
+            case "Level3":
+                PlayMusic(music4);
+                break;
+            default:
+                PlayMusic(music1);
+                break;
+        }
+    }
+
+  
 }

@@ -46,7 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 4749324111267100981}
-  music: {fileID: 0}
+  music1: {fileID: 8300000, guid: ec5ab087fcc79454d9ce67c71e314fa1, type: 3}
+  music2: {fileID: 8300000, guid: adf3edcd72abf444c9bf97cc3935793b, type: 3}
+  music3: {fileID: 8300000, guid: 581454b2ab7f0424b9a6b678f7b9c0c1, type: 3}
+  music4: {fileID: 8300000, guid: 562551479919de7499e0e8a4034b831e, type: 3}
 --- !u!82 &4749324111267100981
 AudioSource:
   m_ObjectHideFlags: 0

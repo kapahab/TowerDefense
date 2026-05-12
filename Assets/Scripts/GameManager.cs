@@ -43,8 +43,7 @@ public class GameManager : MonoBehaviour
 
     void TriggerGameOver()
     {
-        OnGameOver?.Invoke();
-        Time.timeScale = 0;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     void TriggerGameWon()
